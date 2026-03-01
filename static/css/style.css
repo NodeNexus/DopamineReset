@@ -1,0 +1,1838 @@
+/* =========================================================
+   DOPAMINE RESET — MEDIEVAL DUNGEON THEME
+   Stone tablets · Torch light · Carved engravings
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── Design Tokens ── */
+:root {
+    /* Stone palette */
+    --stone-darkest: #0e0c0a;
+    --stone-dark: #1a1612;
+    --stone-mid: #2a241e;
+    --stone-light: #3d3529;
+    --stone-pale: #554a3a;
+    --stone-surface: #6b5e4a;
+
+    /* Torch/Fire accents */
+    --torch-gold: #c9922a;
+    --torch-amber: #e8a030;
+    --torch-bright: #f5c842;
+    --torch-ember: #8b3a0f;
+    --torch-glow: rgba(232, 160, 48, 0.18);
+
+    /* Blood / Danger */
+    --blood-red: #7a1c1c;
+    --crimson: #a52020;
+    --crimson-bright: #c0392b;
+
+    /* Mossy / Success */
+    --moss-dark: #2d4a2d;
+    --moss: #4a7a3a;
+    --moss-light: #6aaa50;
+
+    /* Parchment text */
+    --parchment: #e8dfc0;
+    --parchment-dim: #b8a880;
+    --parchment-muted: #7a6a4a;
+    --ink: #1a1208;
+
+    /* Carved / engraved */
+    --engraving-light: rgba(255, 220, 140, 0.12);
+    --engraving-shadow: rgba(0, 0, 0, 0.7);
+
+    /* Radii */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-pill: 999px;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Base reset for native tags, but leave Bootstrap classes alone */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ============================================================
+   DUNGEON BODY — Stone floor background
+   ============================================================ */
+body.dark-theme {
+    min-height: 100vh;
+    font-family: 'Crimson Text', serif;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--parchment);
+    -webkit-font-smoothing: antialiased;
+
+    /* Stone tile floor via layered gradients */
+    background-color: var(--stone-darkest);
+    background-image:
+        /* Torch ambient glow top-left */
+        radial-gradient(ellipse 60% 40% at 10% 15%, rgba(180, 90, 10, 0.12) 0%, transparent 55%),
+        /* Torch ambient glow top-right */
+        radial-gradient(ellipse 55% 35% at 90% 10%, rgba(180, 90, 10, 0.10) 0%, transparent 55%),
+        /* Centre darkness */
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(14, 12, 10, 0.6) 0%, transparent 80%),
+        /* Stone block grid - horizontal lines */
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 59px,
+            rgba(0, 0, 0, 0.55) 59px,
+            rgba(0, 0, 0, 0.55) 61px),
+        /* Stone block grid - vertical lines (offset every other row) */
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 89px,
+            rgba(0, 0, 0, 0.45) 89px,
+            rgba(0, 0, 0, 0.45) 91px),
+        /* Stone colour variation */
+        repeating-linear-gradient(137deg,
+            rgba(30, 25, 18, 0.4) 0px,
+            rgba(22, 18, 12, 0.3) 40px,
+            rgba(35, 28, 20, 0.35) 80px);
+    background-attachment: fixed;
+}
+
+/* Vignette overlay */
+body.dark-theme::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.65) 100%);
+    z-index: 0;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--stone-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--stone-pale);
+    border-radius: 2px;
+    border: 1px solid var(--stone-light);
+}
+
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================================
+   NAVBAR — Castle Gate Header
+   ============================================================ */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 64px;
+    background:
+        linear-gradient(180deg, rgba(10, 8, 5, 0.97) 0%, rgba(20, 16, 10, 0.95) 100%);
+    border-bottom: 3px solid var(--stone-pale);
+    box-shadow:
+        0 4px 0 var(--stone-dark),
+        0 6px 20px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(200, 160, 80, 0.15);
+    /* Battlements texture top */
+    background-image:
+        linear-gradient(180deg, rgba(10, 8, 5, 0.97) 0%, rgba(20, 16, 10, 0.95) 100%),
+        repeating-linear-gradient(90deg,
+            transparent 0px, transparent 28px,
+            rgba(0, 0, 0, 0.4) 28px, rgba(0, 0, 0, 0.4) 30px);
+}
+
+/* Logo */
+.logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--parchment);
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px var(--torch-amber), 0 2px 4px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.logo::before {
+    content: '⚔️';
+    font-size: 1.1rem;
+}
+
+.logo span {
+    color: var(--torch-amber);
+    text-shadow: 0 0 14px rgba(232, 160, 48, 0.7), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Nav links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    list-style: none;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--parchment-dim);
+    transition: color 0.2s, background 0.2s, text-shadow 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--torch-bright);
+    background: rgba(200, 150, 40, 0.15);
+    text-shadow: 0 0 12px rgba(232, 160, 48, 0.8);
+}
+
+.nav-links a.active {
+    background: rgba(200, 150, 40, 0.25);
+    box-shadow: inset 0 -2px 0 var(--torch-gold);
+}
+
+/* Nav right */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.points-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background:
+        linear-gradient(135deg, #5a3a0a, #3a2205);
+    border: 2px solid var(--torch-gold);
+    padding: 0.25rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--torch-bright);
+    letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(200, 150, 40, 0.3), inset 0 1px 0 rgba(255, 200, 80, 0.15);
+    text-shadow: 0 0 8px rgba(245, 200, 66, 0.5);
+}
+
+.nav-auth-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+}
+
+.nav-auth-btn.outline {
+    background: transparent;
+    border: 1px solid var(--stone-pale);
+    color: var(--parchment-dim);
+}
+
+.nav-auth-btn.outline:hover {
+    border-color: var(--torch-gold);
+    color: var(--torch-bright);
+    box-shadow: 0 0 8px rgba(200, 150, 40, 0.3);
+}
+
+.nav-auth-btn.filled {
+    background: linear-gradient(135deg, var(--torch-ember), var(--blood-red));
+    color: var(--parchment);
+    border: 2px solid var(--torch-gold);
+    box-shadow: 0 0 12px rgba(139, 58, 15, 0.5), inset 0 1px 0 rgba(255, 180, 60, 0.2);
+}
+
+.nav-auth-btn.filled:hover {
+    background: linear-gradient(135deg, var(--torch-amber), var(--torch-ember));
+    box-shadow: 0 0 18px rgba(200, 150, 40, 0.5);
+}
+
+.nav-logout {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    color: var(--parchment-muted);
+    transition: color 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.nav-logout:hover {
+    color: var(--crimson-bright);
+}
+
+/* ============================================================
+   STONE TABLET CARD
+   ============================================================ */
+.card {
+    position: relative;
+    padding: 1.75rem;
+    overflow: hidden;
+    /* Multi-layer stone effect */
+    background:
+        /* Surface variation */
+        repeating-linear-gradient(73deg,
+            transparent 0px,
+            rgba(255, 255, 255, 0.012) 2px,
+            transparent 4px,
+            rgba(0, 0, 0, 0.04) 6px,
+            transparent 10px),
+        /* Base stone colour gradient */
+        linear-gradient(160deg,
+            #2c2519 0%,
+            #221d14 30%,
+            #1e1a11 60%,
+            #2a231a 100%);
+    border-radius: var(--radius-lg);
+    /* Carved border — deep inset look */
+    border: 2px solid var(--stone-pale);
+    box-shadow:
+        /* Outer deep shadow */
+        0 8px 32px rgba(0, 0, 0, 0.7),
+        /* Inner top highlight (chiselled top edge) */
+        inset 0 2px 0 rgba(200, 170, 100, 0.18),
+        /* Inner bottom shadow (chiselled bottom) */
+        inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+        /* Left carved edge */
+        inset 2px 0 0 rgba(255, 200, 100, 0.08),
+        /* Inner glow from torch light */
+        inset 0 0 40px rgba(0, 0, 0, 0.4);
+    /* Subtle transition */
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* Corner rune marks */
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(200, 160, 60, 0.1);
+    border-radius: var(--radius-md);
+    pointer-events: none;
+}
+
+/* Torch flicker ambient */
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(200, 150, 40, 0.25) 30%,
+            rgba(232, 160, 48, 0.4) 50%,
+            rgba(200, 150, 40, 0.25) 70%,
+            transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    border-color: var(--stone-surface);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.8),
+        inset 0 2px 0 rgba(200, 170, 100, 0.25),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+        inset 2px 0 0 rgba(255, 200, 100, 0.12),
+        inset 0 0 40px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(180, 130, 30, 0.12);
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+/* Card heading — engraved label */
+.card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--parchment-dim);
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8), 0 -1px 0 rgba(255, 200, 100, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Glass card variant (kept same as stone) */
+.glass-card {
+    background:
+        linear-gradient(160deg, #2c2519 0%, #1e1a11 60%, #2a231a 100%);
+    backdrop-filter: blur(8px);
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================================
+   DASHBOARD GRID
+   ============================================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+/* Score values — carved numerals */
+.score-display {
+    margin: 0.75rem 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+}
+
+.score-value {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--torch-bright);
+    line-height: 1;
+    text-shadow:
+        0 0 20px rgba(245, 200, 66, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 -1px 0 rgba(255, 220, 100, 0.3);
+}
+
+.score-max {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--parchment-muted);
+}
+
+.stat-highlight {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--torch-amber);
+    margin: 0.5rem 0;
+    line-height: 1;
+    text-shadow: 0 0 14px rgba(232, 160, 48, 0.45), 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.insight-text {
+    font-size: 0.9rem;
+    color: var(--parchment-dim);
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.chart-large {
+    grid-column: span 2;
+}
+
+.chart-medium {
+    grid-column: span 1;
+}
+
+.chart-small {
+    grid-column: span 1;
+}
+
+.full-width {
+    grid-column: span 3;
+}
+
+/* Nudge list — carved scrolls */
+.nudge-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nudge-list li {
+    background:
+        linear-gradient(135deg, rgba(60, 45, 20, 0.6), rgba(40, 30, 12, 0.5));
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--torch-gold);
+    font-size: 0.95rem;
+    color: var(--parchment-dim);
+    border-top: 1px solid rgba(200, 160, 60, 0.12);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.nudge-list li strong {
+    color: var(--parchment);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+}
+
+/* ============================================================
+   STATUS COLOURS
+   ============================================================ */
+.warning {
+    color: var(--crimson-bright) !important;
+    font-weight: 600;
+}
+
+.success {
+    color: var(--moss-light) !important;
+    font-weight: 600;
+}
+
+/* ============================================================
+   PROGRESS BAR — Stone channel with lava fill
+   ============================================================ */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    margin: 0.75rem 0;
+    overflow: hidden;
+    border: 1px solid var(--stone-pale);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1.2s ease;
+}
+
+.progress-fill.warning {
+    background: linear-gradient(90deg, var(--torch-ember), var(--crimson-bright));
+    box-shadow: 0 0 8px rgba(192, 57, 43, 0.6);
+}
+
+.progress-fill.success {
+    background: linear-gradient(90deg, var(--moss-dark), var(--moss-light));
+    box-shadow: 0 0 8px rgba(106, 170, 80, 0.5);
+}
+
+.progress-fill.primary {
+    background: linear-gradient(90deg, var(--torch-ember), var(--torch-amber));
+    box-shadow: 0 0 8px rgba(232, 160, 48, 0.5);
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 78vh;
+    padding: 2rem 0;
+    gap: 4rem;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 580px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(100, 70, 20, 0.3);
+    color: var(--torch-bright);
+    border-radius: var(--radius-sm);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--torch-gold);
+    text-shadow: 0 0 8px rgba(245, 200, 66, 0.4);
+    box-shadow: 0 0 12px rgba(180, 130, 30, 0.2), inset 0 1px 0 rgba(255, 200, 80, 0.1);
+}
+
+.hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.5px;
+    color: var(--parchment);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 40px rgba(180, 130, 30, 0.15);
+}
+
+.gradient-text {
+    color: var(--torch-bright);
+    text-shadow: 0 0 20px rgba(245, 200, 66, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--parchment-dim);
+    margin-bottom: 2.5rem;
+    line-height: 1.75;
+    font-style: italic;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Hero visual */
+.hero-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-visual::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--torch-ember) 0%, transparent 70%);
+    filter: blur(60px);
+    opacity: 0.18;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.mockup-card {
+    width: 100%;
+    max-width: 370px;
+    transform: rotate(2deg) translateY(-10px);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1;
+}
+
+.mockup-card:hover {
+    transform: rotate(0deg) translateY(-18px);
+}
+
+.mockup-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(200, 160, 60, 0.15);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+}
+
+.dot.red {
+    background: var(--crimson-bright);
+    box-shadow: 0 0 6px var(--crimson-bright);
+}
+
+.dot.yellow {
+    background: var(--torch-amber);
+    box-shadow: 0 0 6px var(--torch-amber);
+}
+
+.dot.green {
+    background: var(--moss-light);
+    box-shadow: 0 0 6px var(--moss-light);
+}
+
+.mockup-body {
+    padding: 2rem;
+}
+
+.mockup-body h3 {
+    color: var(--parchment-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.mockup-score {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--torch-bright);
+    margin-bottom: 1rem;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(245, 200, 66, 0.4);
+}
+
+.muted {
+    font-size: 1.5rem;
+    color: var(--parchment-muted);
+    font-weight: 400;
+}
+
+.mockup-text {
+    font-size: 0.875rem;
+    color: var(--parchment-dim);
+    line-height: 1.55;
+    font-style: italic;
+}
+
+.highlight-red {
+    color: var(--crimson-bright);
+    font-weight: 700;
+}
+
+/* ============================================================
+   FEATURES SECTION
+   ============================================================ */
+.features-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 4rem 0 2rem;
+    border-top: 2px solid var(--stone-light);
+}
+
+.feature-card {
+    padding: 2rem;
+    background: linear-gradient(160deg, #2c2519, #1e1a11);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--stone-pale);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(200, 170, 100, 0.12);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--stone-surface);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 16px rgba(180, 130, 30, 0.1);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+.feature-card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--torch-amber);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: normal;
+    text-shadow: 0 0 10px rgba(200, 150, 40, 0.3);
+}
+
+.feature-card p {
+    color: var(--parchment-dim);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    font-style: italic;
+}
+
+/* ============================================================
+   BUTTONS — Carved Stone
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: var(--radius-sm);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+    position: relative;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6b3a0a, #3d1f05);
+    color: var(--parchment);
+    border: 2px solid var(--torch-gold);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 200, 80, 0.2), 0 0 14px rgba(180, 130, 30, 0.2);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--torch-ember), #5a3008);
+    color: var(--parchment);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7), 0 0 20px rgba(230, 160, 40, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #2a2419, #1a1510);
+    color: var(--parchment-dim);
+    border: 2px solid var(--stone-pale);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(200, 170, 100, 0.08);
+}
+
+.btn-secondary:hover {
+    border-color: var(--stone-surface);
+    color: var(--parchment);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--blood-red), #4a0f0f);
+    color: var(--parchment);
+    border: 2px solid var(--crimson);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 12px rgba(120, 28, 28, 0.4);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 18px rgba(160, 32, 32, 0.5);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--moss-dark), #1a2e1a);
+    color: var(--parchment);
+    border: 2px solid var(--moss);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 0.4rem 1rem;
+    font-size: 0.72rem;
+}
+
+.btn-lg {
+    padding: 1rem 2.25rem;
+    font-size: 0.95rem;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* ============================================================
+   AUTH FORMS — Parchment Scroll
+   ============================================================ */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem 0;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 3rem 2.5rem;
+}
+
+.auth-card h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--torch-bright);
+    text-align: center;
+    text-shadow: 0 0 20px rgba(245, 200, 66, 0.4), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.auth-card>p {
+    color: var(--parchment-muted);
+    margin-bottom: 2.25rem;
+    font-size: 0.95rem;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Divider rune line */
+.auth-card::before {
+    content: '— ✦ —';
+    display: block;
+    text-align: center;
+    color: var(--torch-gold);
+    font-size: 0.75rem;
+    letter-spacing: 6px;
+    margin-bottom: 1.5rem;
+    margin-top: -1rem;
+    text-shadow: 0 0 8px rgba(200, 150, 40, 0.5);
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 1.4rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--parchment-muted);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--stone-pale);
+    background: rgba(10, 8, 5, 0.6);
+    color: var(--parchment);
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.form-group input:focus {
+    border-color: var(--torch-gold);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(200, 150, 40, 0.15);
+    background: rgba(20, 15, 8, 0.7);
+}
+
+.form-group input::placeholder {
+    color: var(--parchment-muted);
+    font-style: italic;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #6b3a0a, #3d1f05);
+    color: var(--parchment);
+    border: 2px solid var(--torch-gold);
+    border-radius: var(--radius-sm);
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 200, 80, 0.15), 0 0 14px rgba(180, 130, 30, 0.15);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.auth-btn:hover {
+    background: linear-gradient(135deg, var(--torch-ember), #5a3008);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7), 0 0 20px rgba(230, 160, 40, 0.3);
+    transform: translateY(-1px);
+}
+
+.auth-link {
+    font-size: 0.9rem;
+    color: var(--parchment-muted);
+    text-align: center;
+    font-style: italic;
+}
+
+.auth-link a {
+    color: var(--torch-amber);
+    font-style: normal;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+}
+
+.auth-link a:hover {
+    color: var(--torch-bright);
+    text-decoration: underline;
+}
+
+.flashes {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.flashes li {
+    background: rgba(122, 28, 28, 0.15);
+    color: var(--crimson-bright);
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(156, 32, 32, 0.35);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* ============================================================
+   PAGE TITLE STRIP — Stone Lintel
+   ============================================================ */
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid var(--stone-light);
+    position: relative;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(200, 160, 60, 0.15);
+}
+
+.page-title h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--parchment);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 0 20px rgba(180, 130, 30, 0.1);
+}
+
+.page-title .page-icon {
+    font-size: 1.75rem;
+}
+
+.page-title p {
+    color: var(--parchment-muted);
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+    font-style: italic;
+}
+
+/* ============================================================
+   STAT CARDS GRID
+   ============================================================ */
+.stat-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(160deg, #2c2519, #1e1a11);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--stone-pale);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(200, 170, 100, 0.1);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--stone-surface);
+}
+
+.stat-card .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+    text-shadow: 0 0 14px rgba(200, 150, 40, 0.3), 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.stat-card .stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--parchment-muted);
+}
+
+/* ============================================================
+   HEX CODE / NODE DISPLAY
+   ============================================================ */
+.hex-display {
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 2rem;
+    text-align: center;
+    display: inline-block;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.hex-display .hex-label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--parchment-muted);
+    margin-bottom: 0.5rem;
+}
+
+.hex-display .hex-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    color: var(--torch-bright);
+    text-shadow: 0 0 20px rgba(245, 200, 66, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hex-display .hex-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--parchment-muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ============================================================
+   AI CONSOLE — Dark Scrying Pool
+   ============================================================ */
+.ai-console-card {
+    background: #020100;
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+.ai-console-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.875rem 1.25rem;
+    background: linear-gradient(90deg, rgba(122, 28, 28, 0.2), rgba(80, 20, 20, 0.1));
+    border-bottom: 1px solid rgba(139, 58, 15, 0.3);
+}
+
+.ai-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--crimson-bright);
+    box-shadow: 0 0 8px var(--crimson-bright);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-console-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--crimson-bright);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#aiConsole {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--moss-light);
+    padding: 1.75rem;
+    min-height: 280px;
+}
+
+/* ============================================================
+   FRIENDS GRID
+   ============================================================ */
+.friends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.friend-card {
+    background: linear-gradient(160deg, #2c2519, #1e1a11);
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(200, 170, 100, 0.1);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.friend-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--moss);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 0 16px rgba(74, 122, 58, 0.1);
+}
+
+.friend-card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--parchment);
+    margin-bottom: 0.35rem;
+    transition: color 0.2s;
+}
+
+.friend-card-name:hover {
+    color: var(--torch-amber);
+}
+
+.friend-connected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    background: rgba(45, 74, 45, 0.3);
+    color: var(--moss-light);
+    border: 1px solid rgba(74, 122, 58, 0.35);
+    border-radius: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+}
+
+.connect-form-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.connect-form-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, #4a2a05, #2a1502);
+    border-bottom: 2px solid var(--torch-gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--torch-bright);
+    text-shadow: 0 0 8px rgba(200, 150, 40, 0.4);
+}
+
+/* ============================================================
+   ARMORY / SHOP
+   ============================================================ */
+.armory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.item-card {
+    background: linear-gradient(160deg, #2c2519, #1a1310);
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(200, 170, 100, 0.1);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.item-card::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(200, 160, 60, 0.08);
+    border-radius: var(--radius-md);
+    pointer-events: none;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--torch-gold);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 20px rgba(180, 130, 30, 0.15);
+}
+
+.item-owned-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 4, 2, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    z-index: 2;
+}
+
+.item-owned-stamp {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--moss-light);
+    border: 3px solid var(--moss);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2px;
+    transform: rotate(-12deg);
+    box-shadow: 0 0 20px rgba(74, 122, 58, 0.35);
+    text-shadow: 0 0 10px rgba(106, 170, 80, 0.4);
+    letter-spacing: 3px;
+}
+
+.item-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.item-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--parchment);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.25rem;
+}
+
+.item-type {
+    font-size: 0.75rem;
+    color: var(--parchment-muted);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.item-stat {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--stone-pale);
+    border-radius: 2px;
+    padding: 0.5rem;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.item-stat.atk {
+    color: var(--crimson-bright);
+    border-color: var(--blood-red);
+}
+
+.item-stat.def {
+    color: #7ec8d8;
+    border-color: #3a6a78;
+}
+
+.item-stat.spec {
+    color: var(--torch-bright);
+    border-color: var(--torch-gold);
+}
+
+.item-buy-btn {
+    display: block;
+    width: 100%;
+    padding: 0.65rem;
+    background: linear-gradient(135deg, #3a2805, #221502);
+    border: 2px solid var(--torch-gold);
+    color: var(--torch-bright);
+    border-radius: 2px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 0 0 6px rgba(200, 150, 40, 0.3);
+}
+
+.item-buy-btn:hover {
+    background: linear-gradient(135deg, var(--torch-ember), #3d1f05);
+    box-shadow: 0 0 18px rgba(200, 150, 40, 0.3);
+    color: var(--parchment);
+}
+
+/* Treasury */
+.treasury-box {
+    background: linear-gradient(135deg, #2a1e08, #18110400);
+    border: 2px solid var(--torch-gold);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.75rem;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(180, 130, 30, 0.15), inset 0 1px 0 rgba(255, 200, 80, 0.1);
+}
+
+.treasury-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--parchment-muted);
+    margin-bottom: 0.5rem;
+}
+
+.treasury-amount {
+    font-family: 'Cinzel', serif;
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: var(--torch-bright);
+    text-shadow: 0 0 18px rgba(245, 200, 66, 0.4);
+}
+
+.treasury-cap {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--parchment-muted);
+    margin-top: 0.35rem;
+}
+
+/* ============================================================
+   QUIZ / ONBOARDING
+   ============================================================ */
+.quiz-container {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.quiz-form {
+    background: linear-gradient(160deg, #2c2519, #1e1a11);
+    border: 2px solid var(--stone-pale);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(200, 170, 100, 0.1);
+}
+
+.quiz-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--torch-amber), var(--torch-bright), var(--torch-amber), transparent);
+}
+
+.quiz-question {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--stone-light);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.quiz-q-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--torch-amber);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    text-shadow: 0 0 8px rgba(200, 150, 40, 0.2);
+}
+
+.quiz-radio {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 0.4rem;
+}
+
+.quiz-radio:hover {
+    background: rgba(200, 160, 60, 0.06);
+}
+
+.quiz-radio input[type="radio"] {
+    margin-top: 0.2rem;
+    accent-color: var(--torch-amber);
+    flex-shrink: 0;
+}
+
+.quiz-radio label {
+    color: var(--parchment-dim);
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-style: italic;
+}
+
+.quiz-radio:hover label {
+    color: var(--parchment);
+}
+
+/* ============================================================
+   BACK LINK & SECURITY ALERT
+   ============================================================ */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--parchment-muted);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--stone-light);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.back-link:hover {
+    color: var(--torch-amber);
+    border-color: var(--stone-pale);
+}
+
+.security-alert {
+    background: rgba(100, 70, 10, 0.15);
+    border: 1px solid rgba(160, 120, 40, 0.25);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--torch-amber);
+    margin-bottom: 2rem;
+}
+
+/* ============================================================
+   FOOTER — Dungeon floor inscription
+   ============================================================ */
+footer {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    color: var(--parchment-muted);
+    font-size: 0.82rem;
+    border-top: 2px solid var(--stone-light);
+    margin-top: 4rem;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+footer::before {
+    content: '⚔ ✦ ⚔';
+    display: block;
+    color: var(--stone-surface);
+    letter-spacing: 8px;
+    margin-bottom: 0.75rem;
+    font-style: normal;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes torchFlicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0.85;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
+
+    75% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.blink_me {
+    animation: blinker 1.5s linear infinite;
+}
+
+.animate-in {
+    animation: fadeSlideUp 0.6s ease both;
+}
+
+/* ============================================================
+   BOOTSTRAP OVERRIDES
+   ============================================================ */
+.bg-dark,
+.bg-black {
+    background: linear-gradient(160deg, #2c2519, #1e1a11) !important;
+}
+
+.text-primary {
+    color: var(--torch-amber) !important;
+}
+
+.text-info {
+    color: #7ec8d8 !important;
+}
+
+.text-success {
+    color: var(--moss-light) !important;
+}
+
+.text-danger {
+    color: var(--crimson-bright) !important;
+}
+
+.text-warning {
+    color: var(--torch-bright) !important;
+}
+
+.text-muted,
+.text-secondary {
+    color: var(--parchment-muted) !important;
+}
+
+.text-white {
+    color: var(--parchment) !important;
+}
+
+.border-primary {
+    border-color: var(--torch-gold) !important;
+}
+
+.border-info {
+    border-color: #3a6a78 !important;
+}
+
+.border-success {
+    border-color: var(--moss) !important;
+}
+
+.border-danger {
+    border-color: var(--blood-red) !important;
+}
+
+.border-warning {
+    border-color: var(--torch-gold) !important;
+}
+
+.border-secondary {
+    border-color: var(--stone-pale) !important;
+}
+
+.btn-outline-primary {
+    border-color: var(--torch-gold) !important;
+    color: var(--torch-bright) !important;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(100, 70, 10, 0.3) !important;
+}
+
+.btn-outline-warning {
+    border-color: var(--torch-gold) !important;
+    color: var(--torch-bright) !important;
+}
+
+.btn-outline-warning:hover {
+    background: rgba(100, 70, 10, 0.4) !important;
+    color: var(--parchment) !important;
+}
+
+.btn-outline-secondary {
+    border-color: var(--stone-pale) !important;
+    color: var(--parchment-dim) !important;
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: var(--parchment) !important;
+}
+
+.alert-warning {
+    background: rgba(100, 70, 10, 0.15) !important;
+    border-color: rgba(160, 120, 40, 0.25) !important;
+    color: var(--torch-amber) !important;
+}
+
+.alert-info {
+    background: rgba(30, 80, 90, 0.15) !important;
+    border-color: rgba(60, 120, 140, 0.25) !important;
+    color: #7ec8d8 !important;
+}
+
+.badge.bg-success {
+    background: rgba(45, 74, 45, 0.3) !important;
+    color: var(--moss-light) !important;
+    border: 1px solid var(--moss);
+}
+
+.card.bg-dark,
+.card.bg-black {
+    background: linear-gradient(160deg, #2c2519, #1e1a11) !important;
+    border-color: var(--stone-pale) !important;
+}
+
+.font-monospace {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Cinzel', serif;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        min-height: auto;
+        padding: 4rem 0;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .features-section {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-large,
+    .full-width {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 1rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-large,
+    .chart-small,
+    .chart-medium,
+    .full-width {
+        grid-column: span 1;
+    }
+
+    .armory-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .auth-card {
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .armory-grid {
+        grid-template-columns: 1fr;
+    }
+}
