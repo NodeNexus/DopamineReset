@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="card auth-card">
+        <h2>🏰 Hail, Warrior</h2>
+        <p>The dungeon awaits. Prove your identity to re-enter.</p>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="auth-btn">⚔ Enter the Dungeon</button>
+        </form>
+
+        <p class="auth-link">Not yet inducted? <a href="{{ url_for('register') }}">Join the Order</a></p>
+    </div>
+</div>
+
+
+{% endblock %}

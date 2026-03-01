@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width:860px;margin:0 auto;">
+
+    <!-- Title -->
+    <div class="page-title" style="margin-bottom:2.5rem;">
+        <span class="page-icon">🧩</span>
+        <div>
+            <h1>Acquire the Arcane Extension</h1>
+            <p style="color:var(--parchment-muted);font-size:0.9rem;margin-top:0.2rem;font-style:italic;">
+                The dungeon cannot read your mind — give it eyes first.
+            </p>
+        </div>
+    </div>
+    <!-- Already-installed update notice -->
+    <div class="card"
+        style="margin-bottom:1.5rem;border-color:#ef4444;background:rgba(80,10,10,0.3);padding:1.25rem 1.75rem;display:flex;align-items:center;gap:1rem;">
+        <div style="font-size:2rem;flex-shrink:0;">⚠️</div>
+        <div>
+            <strong style="color:#f87171;font-family:'Cinzel',serif;font-size:0.95rem;">Already installed a previous
+                version?</strong>
+            <p
+                style="color:var(--parchment-muted);font-size:0.85rem;margin:0.25rem 0 0;font-style:italic;line-height:1.6;">
+                Re-download the bundle below, then go to <code
+                    style="background:rgba(0,0,0,0.4);padding:0.1rem 0.35rem;border-radius:2px;font-family:monospace;color:var(--torch-bright);">chrome://extensions</code>,
+                click the <strong style="color:var(--parchment);font-style:normal;">🔄 Reload</strong> icon on the
+                Dopamine Reset card, and log in again.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card"
+        style="margin-bottom:2.5rem;border-color:var(--torch-gold);background:linear-gradient(135deg,rgba(100,65,10,0.25),rgba(40,25,5,0.35));text-align:center;padding:2.5rem;">
+        <div style="font-size:3.5rem;margin-bottom:1rem;">⚗</div>
+        <h2
+            style="font-family:'Cinzel',serif;color:var(--torch-bright);font-size:1.5rem;margin-bottom:0.75rem;text-shadow:0 0 14px rgba(245,200,66,0.4);">
+            No Battle Data Detected
+        </h2>
+        <p style="color:var(--parchment-dim);max-width:520px;margin:0 auto 1.75rem;font-style:italic;line-height:1.75;">
+            Your War Room and Intelligence scrolls are empty because the extension has not yet been forged into your
+            browser.
+            Follow the rites below to arm yourself and begin your dopamine conquest.
+        </p>
+        <a href="{{ url_for('download_extension') }}" class="btn btn-primary btn-lg" download id="ext-download-btn">
+            ⬇ Download the Arcane Extension
+        </a>
+        <p style="color:var(--parchment-muted);font-size:0.78rem;margin-top:0.75rem;font-style:italic;">
+            Chrome / Edge compatible · v1.0 · No account sync required
+        </p>
+    </div>
+
+    <!-- 4-step installation guide -->
+    <h2
+        style="font-family:'Cinzel',serif;color:var(--parchment);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;text-align:center;">
+        ⚔ The Four Rites of Installation ⚔
+    </h2>
+
+    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:3rem;">
+
+        <!-- Step 1 -->
+        <div class="card" style="display:flex;align-items:flex-start;gap:1.5rem;padding:1.75rem;" id="step-1">
+            <div
+                style="flex-shrink:0;width:52px;height:52px;border-radius:4px;background:linear-gradient(135deg,var(--torch-ember),#3d1f05);border:2px solid var(--torch-gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:var(--torch-bright);box-shadow:0 0 12px rgba(200,150,40,0.25);">
+                I
+            </div>
+            <div style="flex:1;">
+                <h3
+                    style="font-family:'Cinzel',serif;color:var(--torch-amber);font-size:1rem;margin-bottom:0.5rem;font-weight:700;text-transform:none;letter-spacing:normal;">
+                    Download &amp; Unzip the Artefact
+                </h3>
+                <p style="color:var(--parchment-dim);line-height:1.7;font-style:italic;">
+                    Click the <strong style="color:var(--torch-bright);font-style:normal;">Download the Arcane
+                        Extension</strong> button above.
+                    Once downloaded, locate the <code
+                        style="background:rgba(0,0,0,0.4);padding:0.1rem 0.4rem;border-radius:2px;font-family:'JetBrains Mono',monospace;color:var(--torch-bright);">dopamine-reset-extension.zip</code>
+                    file in your Downloads folder and extract / unzip it into a permanent folder — do <em>not</em>
+                    delete this folder after installation.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card" style="display:flex;align-items:flex-start;gap:1.5rem;padding:1.75rem;" id="step-2">
+            <div
+                style="flex-shrink:0;width:52px;height:52px;border-radius:4px;background:linear-gradient(135deg,var(--torch-ember),#3d1f05);border:2px solid var(--torch-gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:var(--torch-bright);box-shadow:0 0 12px rgba(200,150,40,0.25);">
+                II
+            </div>
+            <div style="flex:1;">
+                <h3
+                    style="font-family:'Cinzel',serif;color:var(--torch-amber);font-size:1rem;margin-bottom:0.5rem;font-weight:700;text-transform:none;letter-spacing:normal;">
+                    Open the Browser's Extension Vault
+                </h3>
+                <p style="color:var(--parchment-dim);line-height:1.7;font-style:italic;margin-bottom:0.75rem;">
+                    Open <strong style="color:var(--parchment);font-style:normal;">Google Chrome</strong> or <strong
+                        style="color:var(--parchment);font-style:normal;">Microsoft Edge</strong>.
+                    In the address bar, type exactly:
+                </p>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                    <code
+                        style="display:inline-block;background:rgba(0,0,0,0.5);border:1px solid var(--stone-pale);padding:0.5rem 1rem;border-radius:2px;font-family:'JetBrains Mono',monospace;color:var(--torch-bright);font-size:0.9rem;">chrome://extensions</code>
+                    <code
+                        style="display:inline-block;background:rgba(0,0,0,0.5);border:1px solid var(--stone-pale);padding:0.5rem 1rem;border-radius:2px;font-family:'JetBrains Mono',monospace;color:var(--torch-bright);font-size:0.9rem;">edge://extensions</code>
+                </div>
+                <p style="color:var(--parchment-dim);line-height:1.7;font-style:italic;margin-top:0.75rem;">
+                    In the top-right corner of the Extensions page, toggle on
+                    <strong style="color:var(--moss-light);font-style:normal;">Developer mode</strong>.
+                    This unlocks the ability to load extensions from your local vault.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card" style="display:flex;align-items:flex-start;gap:1.5rem;padding:1.75rem;" id="step-3">
+            <div
+                style="flex-shrink:0;width:52px;height:52px;border-radius:4px;background:linear-gradient(135deg,var(--torch-ember),#3d1f05);border:2px solid var(--torch-gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:var(--torch-bright);box-shadow:0 0 12px rgba(200,150,40,0.25);">
+                III
+            </div>
+            <div style="flex:1;">
+                <h3
+                    style="font-family:'Cinzel',serif;color:var(--torch-amber);font-size:1rem;margin-bottom:0.5rem;font-weight:700;text-transform:none;letter-spacing:normal;">
+                    Load the Unpacked Artefact
+                </h3>
+                <p style="color:var(--parchment-dim);line-height:1.7;font-style:italic;">
+                    Click the <strong style="color:var(--parchment);font-style:normal;">Load unpacked</strong> button
+                    that appears after enabling Developer mode.
+                    Navigate to the folder you extracted in Step I and select it.
+                    The <strong style="color:var(--torch-bright);font-style:normal;">Dopamine Reset</strong> extension
+                    will appear in your list — make sure its toggle is <strong
+                        style="color:var(--moss-light);font-style:normal;">enabled</strong>.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="card" style="display:flex;align-items:flex-start;gap:1.5rem;padding:1.75rem;" id="step-4">
+            <div
+                style="flex-shrink:0;width:52px;height:52px;border-radius:4px;background:linear-gradient(135deg,var(--moss-dark),#0f1f0f);border:2px solid var(--moss);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:var(--moss-light);box-shadow:0 0 12px rgba(74,122,58,0.25);">
+                IV
+            </div>
+            <div style="flex:1;">
+                <h3
+                    style="font-family:'Cinzel',serif;color:var(--moss-light);font-size:1rem;margin-bottom:0.5rem;font-weight:700;text-transform:none;letter-spacing:normal;">
+                    Bind Your Identity &amp; Activate Tracking
+                </h3>
+                <p style="color:var(--parchment-dim);line-height:1.7;font-style:italic;">
+                    Click the extension icon in your browser toolbar. Enter your dungeon credentials
+                    (<strong style="color:var(--parchment);font-style:normal;">username &amp; password</strong>) to link
+                    it to your account.
+                    Once logged in, the extension will begin silently recording your browser activity and
+                    transmitting it to the dungeon servers — your corruption will be measured, your vices mapped.
+                </p>
+                <p style="color:var(--parchment-dim);font-style:italic;margin-top:0.5rem;">
+                    🛡 Data is sent only to <code
+                        style="background:rgba(0,0,0,0.4);padding:0.1rem 0.4rem;border-radius:2px;font-family:'JetBrains Mono',monospace;color:var(--torch-bright);">127.0.0.1:8080</code>
+                    — your local dungeon. No external servers.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Final activation message -->
+    <div class="card"
+        style="text-align:center;padding:2.5rem;border-color:var(--moss);background:linear-gradient(135deg,rgba(20,50,20,0.3),rgba(10,25,10,0.4));"
+        id="activation-confirm">
+        <div style="font-size:3rem;margin-bottom:1rem;">🏆</div>
+        <h2
+            style="font-family:'Cinzel Decorative',serif;color:var(--moss-light);font-size:1.3rem;margin-bottom:0.75rem;text-shadow:0 0 14px rgba(106,170,80,0.4);">
+            You Are Now Armed, Warrior
+        </h2>
+        <p style="color:var(--parchment-dim);max-width:540px;margin:0 auto 2rem;font-style:italic;line-height:1.75;">
+            Once the extension has tracked at least a few minutes of browsing, return to your War Room.
+            Your corruption scores, behavioral scrolls, and intelligence maps will begin to materialise — forged in
+            stone, eternally recorded.
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary" id="goto-dashboard-btn">
+                ⚔ Enter the War Room
+            </a>
+            <a href="{{ url_for('behavioral_intelligence') }}" class="btn btn-secondary" id="goto-intel-btn">
+                🧠 Intelligence Lab
+            </a>
+            <a href="{{ url_for('analytics_master') }}" class="btn btn-secondary" id="goto-analytics-btn">
+                📜 Rune Analytics
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Highlight step on scroll  
+    const steps = document.querySelectorAll('[id^="step-"]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.borderColor = 'var(--torch-gold)';
+            } else {
+                entry.target.style.borderColor = 'var(--stone-pale)';
+            }
+        });
+    }, { threshold: 0.6 });
+    steps.forEach(s => observer.observe(s));
+</script>
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ░░░ Full-page Neural Wastes map background ░░░ -->
+<div style="
+    position: fixed;
+    inset: 0;
+    background-image: url('{{ url_for('static', filename='Assets/Backgrounds/Kingdom_Map.png') }}');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.22;
+    z-index: -1;
+    pointer-events: none;
+"></div>
+
+<div class="row mb-5">
+    <div class="col-md-8">
+        <h1 class="text-warning fw-bold text-uppercase mb-2"
+            style="letter-spacing: 0.1em; text-shadow: 0 0 10px rgba(255,193,7,0.5);">The Neural Wastes</h1>
+        <p class="text-secondary font-monospace">Select an active entropy vector to engage in combat. Maintain
+            vigilance. Relapses feed the local corruption.</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <div class="d-inline-block bg-dark border border-warning rounded p-3 text-center">
+            <span class="d-block text-secondary small font-monospace text-uppercase">Player Stats</span>
+            <div
+                class="d-flex justify-content-between align-items-center mt-2 gap-3 pb-2 border-bottom border-secondary">
+                <span class="text-white fw-bold">LVL <span class="text-info fs-4">{{ user.level }}</span></span>
+                <span class="text-white fw-bold"><i class="bi bi-coin text-warning"></i> {{ user.coins }}</span>
+                <span class="text-white fw-bold"><i class="bi bi-fire text-danger"></i> {{ user.current_streak }}</span>
+            </div>
+            <div class="progress mt-2 bg-black" style="height: 10px;">
+                {% set xp_req = (100 * (user.level ** 1.5)) | int %}
+                {% set xp_pct = (user.xp / xp_req) * 100 %}
+                <div class="progress-bar bg-info" role="progressbar" style="width: {{ xp_pct }}%;"></div>
+            </div>
+            <small class="text-muted font-monospace" style="font-size: 0.7rem;">{{ user.xp }} / {{ xp_req }} XP</small>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-black border-warning shadow-lg">
+            <div
+                class="card-header bg-dark border-bottom border-warning d-flex justify-content-between align-items-center">
+                <h5 class="text-warning font-monospace text-uppercase fw-bold mb-0"><i
+                        class="bi bi-list-check me-2"></i>Daily Syndicate Tasks</h5>
+                <span class="badge bg-secondary text-dark fw-bold font-monospace">Resets at Midnight</span>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush bg-transparent">
+                    {% for task in tasks %}
+                    <li
+                        class="list-group-item bg-transparent border-secondary d-flex justify-content-between align-items-center p-3">
+                        <div class="d-flex align-items-center">
+                            {% if task.is_completed %}
+                            <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                            <span class="text-secondary text-decoration-line-through font-monospace">{{ task.description
+                                }}</span>
+                            {% else %}
+                            <i class="bi bi-circle text-muted fs-4 me-3"></i>
+                            <span class="text-white font-monospace">{{ task.description }}</span>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if task.is_completed %}
+                            <span class="badge bg-success font-monospace p-2">CLAIMED</span>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('claim_task', task_id=task.id) }}" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-warning fw-bold font-monospace">
+                                    Claim +{{ task.coin_reward }} <i class="bi bi-coin"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% endfor %}
+                    {% if not tasks %}
+                    <li class="list-group-item bg-transparent text-center text-muted font-monospace p-4">
+                        No tasks assigned today. Rest well.
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% set bg_map = {
+'Scroll Serpent': 'Serpent_Cave.png',
+'Crimson Temptress': 'Temptress_Lair.png',
+'Time Thief Warlord': 'Warlord_Throne_Hall.png',
+'Comfort Wraith': 'Sugar_Crypt.png',
+'Validation Phantom': 'Validation_Mirror_Chamber.png',
+'Void Monarch': 'Void_Shadow_Hall.png',
+'Procrastination Lich': 'Lich_Study_Chamber.png'
+} %}
+
+<div class="row g-5">
+    {% for boss in bosses %}
+    {% set bg_image = bg_map.get(boss.boss_type, 'Kingdom_Map.png') %}
+    <!-- Visual darkening based on corruption % -->
+    {% set darkness = (boss.corruption_percent / 100) * 0.8 %}
+
+    <div class="col-12">
+        <div class="card bg-black border-secondary position-relative shadow-lg overflow-hidden">
+            <!-- Dungeon Background -->
+            <div class="position-absolute w-100 h-100" style="
+                    background-image: url('{{ url_for('static', filename='Assets/Backgrounds/' + bg_image) }}');
+                    background-size: cover;
+                    background-position: center;
+                    opacity: 0.3;
+                    z-index: 0;
+                    border-radius: inherit;
+                    overflow: hidden;
+                "></div>
+
+            <!-- Corruption Overlay -->
+            <div class="position-absolute w-100 h-100"
+                style="background-color: rgba(0,0,0,{{ darkness }}); z-index: 1; border-radius: inherit;"></div>
+
+            {% set sprite_folder_map = {
+            'Scroll Serpent': ('Serpent_Boss_1', 'Serpent_Boss.png'),
+            'Crimson Temptress': ('Temptress_Boss_2', 'Temptress_Boss.png'),
+            'Time Thief Warlord': ('Time_Thief_Warlord_3', 'Time_Thief_Warlord.png'),
+            'Comfort Wraith': ('Comfort_Wrait_4', 'Comfort_Wrait.png'),
+            'Validation Phantom': ('Validation_Phantom_5', 'Validation_Phantom.png'),
+            'Void Monarch': ('Void_Monarch_6', 'Void_Monarch.png'),
+            'Procrastination Lich': ('Procrastination_Lich_7', 'Procrastination_Lich.png')
+            } %}
+            {% set sprite_data = sprite_folder_map.get(boss.boss_type, ('Serpent_Boss_1', 'Serpent_Boss.png')) %}
+            {% set sprite_folder = sprite_data[0] %}
+            {% set boss_sprite_name = sprite_data[1] %}
+
+            <!-- Header -->
+            <div class="card-header bg-transparent border-bottom border-danger position-relative z-3 p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="text-danger fw-bold text-uppercase mb-0"
+                            style="text-shadow: 2px 2px 4px #000; letter-spacing: 0.1em;">
+                            {{ boss.boss_type }} Domain
+                        </h4>
+                        <span class="text-muted small font-monospace">Corruption: <span class="text-warning">{{
+                                boss.corruption_percent | int }}%</span> | Relapses: <span class="text-danger">{{
+                                boss.relapse_count }}</span></span>
+                    </div>
+                    {% if boss.current_bodyguard_index > 6 %}
+                    <span class="badge bg-success border border-success p-2 font-monospace fs-6">REGION CLEARED</span>
+                    {% else %}
+                    <span class="badge bg-danger border border-danger p-2 font-monospace pulse-animation fs-6">ACTIVE
+                        THREAT</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Side Scrolling Gauntlet -->
+            <div class="card-body position-relative z-3 p-4">
+                <div class="d-flex justify-content-between flex-nowrap align-items-center w-100 overflow-auto pb-4 px-2"
+                    style="scrollbar-width: thin; scrollbar-color: #dc3545 #000; padding-top: 22px; max-width: 100%; overflow-x: auto; overflow-y: hidden;">
+
+                    {% for i in range(1, 7) %}
+                    {% if i < 6 %} {% set node_sprite='BodyGuard' ~ i ~ '.png' %} {% set node_name='Bodyguard ' ~ i %}
+                        {% else %} {% set node_sprite=boss_sprite_name %} {% set node_name='THE BOSS' %} {% endif %} {%
+                        set node_path='Assets/' ~ sprite_folder ~ '/' ~ node_sprite %} {% set
+                        node_margin='transform: translateY(-15px);' if i==boss.current_bodyguard_index else '' %} <!--
+                        Gauntlet Node -->
+                        <div class="text-center d-flex flex-column align-items-center"
+                            style="flex: 0 0 140px; position: relative; {{ node_margin }}">
+
+                            {% if i < boss.current_bodyguard_index %} <!-- Defeated Node -->
+                                <div class="position-relative mb-2">
+                                    <img src="{{ url_for('static', filename=node_path) }}"
+                                        class="img-fluid rounded-circle border border-danger p-1 bg-black"
+                                        style="width: 80px; height: 80px; object-fit: cover; filter: grayscale(100%) brightness(50%); opacity: 0.7;">
+                                    <i class="bi bi-x-lg text-danger position-absolute top-50 start-50 translate-middle fs-1"
+                                        style="text-shadow: 0 0 10px red;"></i>
+                                </div>
+                                <span class="d-block small font-monospace text-muted text-decoration-line-through">{{
+                                    node_name }}</span>
+
+                                {% elif i == boss.current_bodyguard_index %}
+                                <!-- Active Target Node -->
+                                <div class="pulse-animation position-relative d-inline-block mb-2">
+                                    <div class="position-absolute bg-danger w-100 h-100 rounded-circle"
+                                        style="opacity: 0.4; filter: blur(20px); top:0; left:0;"></div>
+                                    <img src="{{ url_for('static', filename=node_path) }}"
+                                        class="img-fluid rounded-circle border border-warning border-3 p-1 bg-black position-relative z-2 drop-shadow-heavy"
+                                        style="width: 120px; height: 120px; object-fit: cover;">
+                                </div>
+                                <span class="d-block small font-monospace text-warning fw-bold text-uppercase"
+                                    style="text-shadow: 0 0 5px orange;">{{ node_name }}</span>
+                                <a href="{{ url_for('rpg_combat', boss_id=boss.id) }}"
+                                    class="btn btn-sm btn-outline-warning mt-3 w-75 fw-bold text-uppercase font-monospace btn-hover-glow"
+                                    style="letter-spacing: 0.1em;">
+                                    <i class="bi bi-shield-shaded me-1"></i> Engage
+                                </a>
+
+                                {% else %}
+                                <!-- Locked Node -->
+                                <div class="mb-2 position-relative">
+                                    <img src="{{ url_for('static', filename=node_path) }}"
+                                        class="img-fluid rounded-circle border border-secondary p-1 bg-black"
+                                        style="width: 80px; height: 80px; object-fit: cover; filter: brightness(15%); opacity: 0.5;">
+                                </div>
+                                <span class="d-block small font-monospace text-secondary"><i
+                                        class="bi bi-lock-fill text-muted me-1"></i> Locked</span>
+                                {% endif %}
+
+                        </div>
+
+                        <!-- Connecting Line between nodes -->
+                        {% if i < 6 %} {% if i < boss.current_bodyguard_index %} {% set
+                            line_bg='linear-gradient(90deg, #dc3545, #dc3545)' %} {% elif
+                            i==boss.current_bodyguard_index %} {% set line_bg='linear-gradient(90deg, #ffc107, #6c757d)'
+                            %} {% else %} {% set line_bg='#343a40' %} {% endif %} <div class="flex-grow-1"
+                            style="height: 4px; flex: 1 0 40px; background: {{ line_bg }}; margin-top: -30px; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                </div>
+                {% endif %}
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<style>
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    .btn-hover-glow:hover {
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+        background-color: rgba(255, 193, 7, 0.1);
+    }
+
+    .drop-shadow-heavy {
+        filter: drop-shadow(0 0 15px rgba(220, 53, 69, 0.5));
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+
+{% endblock %}

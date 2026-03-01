@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="badge">⚔ Enter the Dungeon of Focus</div>
+        <h1 class="hero-title">Forge Your Mind.<br><span class="gradient-text">Conquer Distraction.</span></h1>
+        <p class="hero-subtitle">
+            A dark-arts platform that maps your digital vices, unmasks your weakest hours,
+            and arms you with the discipline to reclaim your attention span.
+        </p>
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">⚔ Enter the War Room</a>
+            {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary">⚔ Join the Order</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">🏰 Enter Dungeon</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <div class="glass-card mockup-card">
+            <div class="mockup-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="mockup-body">
+                <h3>⚗ Dopamine Corruption Level</h3>
+                <h2 class="mockup-score">72<span class="muted">/100</span></h2>
+                <div class="progress-bar">
+                    <div class="progress-fill warning" style="width: 72%;"></div>
+                </div>
+                <p class="mockup-text">
+                    <span class="highlight-red">🔥 High Corruption!</span>
+                    The dark forces of instant gratification hold sway over your mind.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="feature-card">
+        <div class="feature-icon">📜</div>
+        <h3>Behavioral Scrolls</h3>
+        <p>The ancient art of 3-hourly analysis — we divine when and why your focus crumbles to dust.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">⚗</div>
+        <h3>Dopamine Alchemy</h3>
+        <p>Not all screen-time is equal. We transmute your raw data into a corruption score that reveals your true
+            vices.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">🗡</div>
+        <h3>War Council Nudges</h3>
+        <p>Receive battle-tested counsel forged from your Peak Distraction Windows. Strike weakness at its source.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set bg_map = {
+'Scroll Serpent': 'Serpent_Cave.png',
+'Crimson Temptress': 'Temptress_Lair.png',
+'Time Thief Warlord': 'Warlord_Throne_Hall.png',
+'Comfort Wraith': 'Sugar_Crypt.png',
+'Validation Phantom': 'Validation_Mirror_Chamber.png',
+'Void Monarch': 'Void_Shadow_Hall.png',
+'Procrastination Lich': 'Lich_Study_Chamber.png'
+} %}
+{% set bg_image = bg_map.get(boss.boss_type, 'Kingdom_Map.png') %}
+
+{% set sprite_folder_map = {
+'Scroll Serpent': ('Serpent_Boss_1', 'Serpent_Boss.png'),
+'Crimson Temptress': ('Temptress_Boss_2', 'Temptress_Boss.png'),
+'Time Thief Warlord': ('Time_Thief_Warlord_3', 'Time_Thief_Warlord.png'),
+'Comfort Wraith': ('Comfort_Wrait_4', 'Comfort_Wrait.png'),
+'Validation Phantom': ('Validation_Phantom_5', 'Validation_Phantom.png'),
+'Void Monarch': ('Void_Monarch_6', 'Void_Monarch.png'),
+'Procrastination Lich': ('Procrastination_Lich_7', 'Procrastination_Lich.png')
+} %}
+{% set sprite_data = sprite_folder_map.get(boss.boss_type, ('Serpent_Boss_1', 'Serpent_Boss.png')) %}
+{% set sprite_folder = sprite_data[0] %}
+{% set boss_sprite_name = sprite_data[1] %}
+
+{% if boss.current_bodyguard_index < 6 %} {% set current_sprite='BodyGuard' ~ boss.current_bodyguard_index ~ '.png' %}
+    {% else %} {% set current_sprite=boss_sprite_name %} {% endif %} {% set sprite_path='Assets/' ~ sprite_folder ~ '/'
+    ~ current_sprite %} <div class="position-fixed top-0 start-0 w-100 h-100 bg-black" style="z-index: -2;">
+    </div>
+    <div class="position-fixed top-0 start-0 w-100 h-100" style="
+    background-image: url('{{ url_for('static', filename='Assets/Backgrounds/' + bg_image) }}'); 
+    background-size: cover; 
+    background-position: center; 
+    opacity: 0.3;
+    z-index: -1;
+"></div>
+
+    <div class="row justify-content-center mb-4 mt-3">
+        <div class="col-md-10 d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('rpg_map') }}" class="btn btn-outline-secondary font-monospace"><i
+                    class="bi bi-arrow-left me-2"></i>Retreat</a>
+            <h2 class="text-danger fw-bold text-uppercase mb-0"
+                style="letter-spacing: 0.2em; text-shadow: 0 0 15px rgba(220,53,69,0.8);">{{ boss.boss_type }}</h2>
+            <span class="badge bg-dark border border-warning text-warning p-2 font-monospace fs-6">Corruption: {{
+                boss.corruption_percent | int }}%</span>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <!-- Player Stats -->
+        <div class="col-md-4">
+            <div class="card bg-dark border-info shadow">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="text-info mb-0 font-monospace">Operative</h5>
+                        <span class="badge bg-secondary font-monospace">LVL {{ user.level }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between small text-secondary font-monospace mb-1">
+                        <span>HP</span>
+                        <span class="text-white">{{ user.current_health }} / {{ user.max_health }}</span>
+                    </div>
+                    <div class="progress bg-black mb-3" style="height: 12px;">
+                        {% set p_hp_pct = (user.current_health / user.max_health) * 100 %}
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ p_hp_pct }}%;"></div>
+                    </div>
+
+                    <div class="row g-2 text-center small font-monospace">
+                        <div class="col-6">
+                            <div class="border border-secondary rounded p-1"><span
+                                    class="text-muted d-block">ATK</span><span class="text-white fw-bold">{{
+                                    user.attack_stat }}</span></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border border-secondary rounded p-1"><span
+                                    class="text-muted d-block">DEF</span><span class="text-white fw-bold">{{
+                                    user.defense_stat }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+            <h1 class="text-secondary fw-bold mb-4" style="text-shadow: 0 0 20px rgba(0,0,0,0.8);">VS</h1>
+
+            <!-- Render the Active Boss Foreground Sprite -->
+            <div class="position-relative d-inline-block p-3">
+                <div class="position-absolute w-100 h-100 bg-danger pulse-animation"
+                    style="top:0; left:0; border-radius: 50%; opacity: 0.1; filter: blur(30px);"></div>
+                <img src="{{ url_for('static', filename=sprite_path) }}" alt="{{ boss.boss_type }} Target"
+                    class="img-fluid drop-shadow-heavy"
+                    style="max-height: 270px; border-radius: 20px; z-index: 2; position: relative; border: 2px solid rgba(220,53,69,0.3);">
+            </div>
+        </div>
+
+        <!-- Boss Stats -->
+        <div class="col-md-4">
+            <div class="card bg-black border-danger shadow-lg">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="text-danger mb-0 font-monospace text-uppercase">Entity</h5>
+                        <span class="badge bg-danger font-monospace pulse-animation"><i class="bi bi-activity"></i>
+                            Active</span>
+                    </div>
+                    <div class="d-flex justify-content-between small font-monospace mb-1">
+                        <span class="text-muted">Target Entity</span>
+                        <span class="text-danger fw-bold">
+                            {% if boss.current_bodyguard_index < 6 %} Bodyguard {{ boss.current_bodyguard_index }} / 5
+                                {% else %} THE BOSS {% endif %} </span>
+                    </div>
+
+                    {% set enemy_power = 9999 %}
+                    {% if boss.current_bodyguard_index == 1 %}{% set enemy_power = 28 %}
+                    {% elif boss.current_bodyguard_index == 2 %}{% set enemy_power = 70 %}
+                    {% elif boss.current_bodyguard_index == 3 %}{% set enemy_power = 180 %}
+                    {% elif boss.current_bodyguard_index == 4 %}{% set enemy_power = 300 %}
+                    {% elif boss.current_bodyguard_index == 5 %}{% set enemy_power = 530 %}
+                    {% elif boss.current_bodyguard_index == 6 %}{% set enemy_power = 1200 %}
+                    {% endif %}
+
+                    <div class="bg-dark p-3 rounded mb-3 text-center border"
+                        style="border-color: #dc3545 !important; box-shadow: 0 0 15px rgba(220,53,69,0.2);">
+                        <span class="d-block text-secondary font-monospace small mb-1">Combat Power Required</span>
+                        <h2 class="text-danger fw-bold mb-0">{{ enemy_power }}</h2>
+                    </div>
+
+                    <div class="row g-2 text-center small font-monospace">
+                        <div class="col-4">
+                            <div class="border border-secondary rounded p-1"><span
+                                    class="text-muted d-block">Regen</span><span class="text-success fw-bold">{{
+                                    boss.regen_rate }}%</span></div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border border-secondary rounded p-1"><span
+                                    class="text-muted d-block">Victories</span><span class="text-info fw-bold">{{
+                                    boss.victory_count }}</span></div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border border-secondary rounded p-1"><span
+                                    class="text-muted d-block">Relapses</span><span class="text-warning fw-bold">{{
+                                    boss.relapse_count }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark border-secondary">
+                <div
+                    class="card-header bg-black text-white font-monospace text-uppercase text-center border-bottom border-secondary">
+                    <i class="bi bi-crosshair me-2"></i>Combat Actions
+                </div>
+                <div class="card-body p-4 text-center">
+                    <p class="text-muted mb-4 font-monospace">Choose your tactical response to the current urge.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {% set stats = namespace(attack=user.attack_stat, defense=user.defense_stat) %}
+                            {% for eq in user.equipment %}
+                            {% if eq.effect_type == 'attack' %}
+                            {% set stats.attack = stats.attack + eq.effect_value %}
+                            {% endif %}
+                            {% if eq.effect_type == 'defense' %}
+                            {% set stats.defense = stats.defense + eq.effect_value %}
+                            {% endif %}
+                            {% endfor %}
+                            {% set player_power = stats.attack + stats.defense %}
+
+                            <form method="POST" action="{{ url_for('combat_resolve', boss_id=boss.id) }}">
+                                {% if user.current_health <= 0.0 %} <button type="button"
+                                    class="btn btn-dark border-secondary w-100 py-3 fw-bold font-monospace text-uppercase d-flex flex-column align-items-center justify-content-center"
+                                    disabled style="opacity: 0.7;">
+                                    <i class="bi bi-bandaid d-block mb-2 fs-3 text-warning"></i>
+                                    <span>Recovering HP...</span>
+                                    <span class="text-warning mt-1 d-block small">ETA: <span
+                                            id="recovery-timer">Calculating...</span></span>
+                                    </button>
+                                    <script>
+                                        let timeLeft = parseInt("{{ recovery_seconds_left | default(0) }}", 10);
+                                        const timerEl = document.getElementById('recovery-timer');
+
+                                        function updateTimer() {
+                                            if (timeLeft <= 0) {
+                                                timerEl.innerText = "Ready. Refreshing...";
+                                                location.reload();
+                                                return;
+                                            }
+                                            let mins = Math.floor(timeLeft / 60);
+                                            let secs = timeLeft % 60;
+                                            timerEl.innerText = mins + "m " + (secs < 10 ? "0" : "") + secs + "s";
+                                            timeLeft--;
+                                        }
+
+                                        updateTimer(); // Initial call
+                                        setInterval(updateTimer, 1000);
+                                    </script>
+                                    {% else %}
+                                    <button type="submit"
+                                        class="btn btn-outline-info w-100 py-3 fw-bold font-monospace btn-hover-glow text-uppercase d-flex flex-column align-items-center justify-content-center">
+                                        <i class="bi bi-sword d-block mb-2 fs-3 text-info"></i>
+                                        <span>Engage Target</span>
+                                        <span class="mt-1 d-block small">
+                                            <span class="text-white">Your Power: <strong>{{ player_power | int
+                                                    }}</strong></span> |
+                                            {% if player_power >= enemy_power %}
+                                            <span class="text-success">Achievable</span>
+                                            {% else %}
+                                            <span class="text-danger">IMPOSSIBLE (Need {{ enemy_power | int }})</span>
+                                            {% endif %}
+                                        </span>
+                                    </button>
+                                    {% if player_power < enemy_power %} <small
+                                        class="text-danger d-block mt-2 font-monospace fw-bold">Warning: Defeat drains
+                                        all HP!</small>
+                                        {% endif %}
+                                        {% endif %}
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <form method="POST" action="{{ url_for('combat_relapse', boss_id=boss.id) }}">
+                                <button type="submit"
+                                    class="btn btn-outline-danger w-100 py-3 fw-bold font-monospace text-uppercase d-flex flex-column align-items-center justify-content-center"
+                                    onmouseover="this.classList.add('bg-danger', 'text-white')"
+                                    onmouseout="this.classList.remove('bg-danger', 'text-white')">
+                                    <i class="bi bi-skull d-block mb-2 fs-3"></i>
+                                    <span>Succumb (Relapse)</span>
+                                    <span class="text-white-50 mt-1 d-block small">Retreat & Increase Corruption</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        .btn-hover-glow:hover {
+            box-shadow: 0 0 15px rgba(13, 202, 240, 0.5);
+            background-color: rgba(13, 202, 240, 0.1);
+        }
+
+        .drop-shadow-heavy {
+            filter: drop-shadow(0 0 20px rgba(220, 53, 69, 0.5));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+
+    {% endblock %}

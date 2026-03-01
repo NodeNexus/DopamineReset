@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+
+    <!-- Header -->
+    <div style="text-align:center; margin-bottom:3rem;">
+        <div class="page-title"
+            style="justify-content:center; margin-bottom:0.75rem; padding-bottom:0; border-bottom:none;">
+            <span class="page-icon">🧬</span>
+            <h1>Neural Calibration</h1>
+        </div>
+        <p
+            style="color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.85rem; max-width:600px; margin:0 auto; line-height:1.7;">
+            To generate your adversary profile, answer instinctively.<br>Your answers will permanently shape the
+            landscape of The Wastes.
+        </p>
+    </div>
+
+    <!-- Quiz Form -->
+    <div class="quiz-container">
+        <form method="POST" action="{{ url_for('onboarding') }}" class="quiz-form">
+
+            <!-- Q1 -->
+            <div class="quiz-question">
+                <div class="quiz-q-label">
+                    <i class="bi bi-heptagon me-2"></i>
+                    Q1. You've hit a wall of exhaustion. What is your immediate instinct to self-soothe?
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q1" id="q1a" value="scroll" required>
+                    <label for="q1a">Mindlessly swiping through short-form content until I zone out.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q1" id="q1b" value="eat">
+                    <label for="q1b">Seeking out high-sugar or ultra-processed comfort foods.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q1" id="q1c" value="game">
+                    <label for="q1c">Booting up a competitive game and playing "just one more match".</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q1" id="q1d" value="nsfw">
+                    <label for="q1d">Seeking hyper-stimulating adult content or intensive fantasy escapism.</label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-question">
+                <div class="quiz-q-label">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Q2. There is a massive, life-altering deadline approaching. How does your behavior shift?
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q2" id="q2a" value="delay" required>
+                    <label for="q2a">I find 100 "productive" micro-tasks to do to avoid starting the actual heavy
+                        lifting.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q2" id="q2b" value="binge">
+                    <label for="q2b">I completely detach, launching a new Netflix or Anime series to numb the
+                        anxiety.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q2" id="q2c" value="none">
+                    <label for="q2c">I usually just buckle down and do it. (Nullifies threat)</label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-question">
+                <div class="quiz-q-label">
+                    <i class="bi bi-eye me-2"></i>
+                    Q3. When you are out with friends or family, how often does your hand drift to your phone?
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q3" id="q3a" value="always" required>
+                    <label for="q3a">Constantly. The ghost vibrations and notification anxiety are real.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q3" id="q3b" value="often">
+                    <label for="q3b">Often. If the conversation lulls for even 5 seconds, I check my
+                        notifications.</label>
+                </div>
+                <div class="quiz-radio">
+                    <input class="form-check-input" type="radio" name="q3" id="q3c" value="rarely">
+                    <label for="q3c">Rarely. I'm generally present in the moment.</label>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div style="text-align:center; margin-top:2rem;">
+                <p
+                    style="color:var(--text-muted); font-size:0.78rem; font-family:'JetBrains Mono',monospace; margin-bottom:1.25rem;">
+                    Peak temporal vulnerability will be extracted directly from your backend telemetry.
+                </p>
+                <button type="submit" class="auth-btn btn-lg"
+                    style="max-width:400px; letter-spacing:0.1em; text-transform:uppercase;">
+                    <i class="bi bi-lightning-charge-fill" style="margin-right:0.5rem;"></i>
+                    Initiate Neural Generation
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

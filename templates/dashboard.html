@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <span class="page-icon">⚔️</span>
+        <div>
+            <h1>The War Room</h1>
+            <p style="color:var(--parchment-muted);font-size:0.9rem;margin-top:0.2rem;font-style:italic;">Your
+                corruption and focus intelligence — forged in stone</p>
+        </div>
+    </div>
+
+    <!-- No-data Guard: redirect user to extension page if no usage logged -->
+    {% if patterns.total_time == 0 %}
+    <div style="max-width:700px;margin:2rem auto;text-align:center;">
+        <div class="card"
+            style="padding:3rem 2.5rem;border-color:var(--torch-gold);background:linear-gradient(135deg,rgba(100,65,10,0.25),rgba(40,25,5,0.35));">
+            <div style="font-size:4rem;margin-bottom:1.25rem;">🔮</div>
+            <h2
+                style="font-family:'Cinzel Decorative',serif;color:var(--torch-bright);font-size:1.4rem;margin-bottom:0.75rem;text-shadow:0 0 14px rgba(245,200,66,0.4);">
+                The War Room Lies Silent
+            </h2>
+            <p
+                style="color:var(--parchment-dim);max-width:480px;margin:0 auto 0.5rem;font-style:italic;line-height:1.8;">
+                No battle data has been received. The dungeon's stone tablets cannot engrave what hasn't been witnessed.
+                You must first bind the <strong style="color:var(--torch-bright);font-style:normal;">Arcane Browser
+                    Extension</strong>
+                to your soul — only then shall your usage be recorded in the chronicles.
+            </p>
+            <p style="color:var(--parchment-muted);font-size:0.85rem;margin-bottom:2rem;font-style:italic;">
+                ⌛ Already installed? Browse the web for a few minutes and then return.
+            </p>
+            <a href="{{ url_for('get_extension') }}" class="btn btn-primary btn-lg" id="dashboard-get-ext-btn">
+                🧩 Acquire the Extension
+            </a>
+        </div>
+    </div>
+    {% else %}
+
+    <!-- Metric Cards Grid -->
+    <div class="dashboard-grid stagger" style="margin-bottom:1.5rem;">
+
+
+        <!-- Dopamine Score -->
+        <div class="card score-card animate-in">
+            <h3>⚗️ Corruption Level</h3>
+            <div class="score-display">
+                <span class="score-value">{{ patterns.dopamine_score }}</span>
+                <span class="score-max">/ 100</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill {% if patterns.dopamine_score > 70 %}warning{% else %}success{% endif %}"
+                    style="width: {{ patterns.dopamine_score }}%;"></div>
+            </div>
+            <p class="insight-text">
+                {% if patterns.dopamine_score > 70 %}
+                <span class="warning"><i class="bi bi-exclamation-triangle-fill"></i> High Dopamine!</span> You're
+                spending too much time on instant-gratification apps.
+                {% else %}
+                <span class="success"><i class="bi bi-check-circle-fill"></i> Balanced.</span> Your digital consumption
+                is healthy.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Peak Distraction Window -->
+        <div class="card status-card animate-in">
+            <h3>🕰️ Peak Distraction Watch</h3>
+            <div class="stat-highlight">{{ patterns.peak_window }}</div>
+            <p class="insight-text">This is when you're most likely to scroll mindlessly. Try a "Focus Lock" then.</p>
+        </div>
+
+        <!-- Streak -->
+        <div class="card streak-card animate-in">
+            <h3>🔥 Warrior Streak</h3>
+            <div class="stat-highlight">{{ user.current_streak }} Days</div>
+            <p class="insight-text">Consistent focus is the key to neuroplasticity.</p>
+        </div>
+
+        <!-- Most Addictive App -->
+        <div class="card status-card animate-in">
+            <h3>🧿 Most Insidious Foe</h3>
+            <div class="stat-highlight">{{ patterns.top_app }}</div>
+            <p class="insight-text">Dominance Ratio:
+                <strong class="{% if patterns.app_dominance > 40 %}warning{% else %}success{% endif %}">{{
+                    patterns.app_dominance }}%</strong>
+            </p>
+        </div>
+
+        <!-- Productivity Ratio -->
+        <div class="card score-card animate-in">
+            <h3>⚔️ Battle Efficiency</h3>
+            <div class="score-display">
+                <span class="score-value">{{ patterns.productivity_ratio }}</span>
+                <span class="score-max">%</span>
+            </div>
+            <p class="insight-text">Weekly Growth:
+                <strong class="{% if patterns.focus_growth > 0 %}success{% else %}warning{% endif %}">{{
+                    patterns.focus_growth }}%</strong>
+            </p>
+        </div>
+
+        <!-- Deep Work Record -->
+        <div class="card streak-card animate-in">
+            <h3>⏳ Deep Focus Vigil</h3>
+            <div class="stat-highlight">{{ patterns.deep_work_record }} Min</div>
+            <p class="insight-text">Longest uninterrupted focus session this week.</p>
+        </div>
+
+        <!-- Distraction Burst Index -->
+        <div class="card status-card animate-in">
+            <h3>💥 Distraction Siege Index</h3>
+            <div class="stat-highlight">{{ patterns.burst_intensity }}</div>
+            <p class="insight-text">Total category switches within 3-hour windows.</p>
+        </div>
+
+        <!-- Block Quality Score -->
+        <div class="card score-card animate-in">
+            <h3>🏅 Focus Purity Score</h3>
+            <div class="score-display">
+                <span class="score-value">{{ patterns.block_quality }}</span>
+            </div>
+            <p class="insight-text">Avg focus quality per productivity session.</p>
+        </div>
+
+        <!-- Attention Fragmentation -->
+        <div class="card streak-card animate-in">
+            <h3>🗡 Mind Fragmentation</h3>
+            <div class="stat-highlight">{{ patterns.fragmentation }}%</div>
+            <p class="insight-text">Percentage of total intervals activated. Lower is better.</p>
+        </div>
+
+        <!-- Sessions Count -->
+        <div class="card status-card animate-in">
+            <h3>🏹 App Launch Fusillade</h3>
+            <div class="stat-highlight">{{ patterns.sessions_count }} Sessions</div>
+            <p class="insight-text">Total individual app launches recorded.</p>
+        </div>
+
+        <!-- Late Night Dopamine -->
+        <div class="card score-card animate-in">
+            <h3>🌙 Midnight Corruption</h3>
+            <div class="score-display">
+                <span class="score-value">{{ patterns.late_night_minutes }}</span>
+                <span class="score-max">Min</span>
+            </div>
+            <p class="insight-text">Time spent on screens between 23:00 &mdash; 02:00.</p>
+        </div>
+
+        <!-- Dopamine Stability -->
+        <div class="card streak-card animate-in">
+            <h3>📊 Corruption Variance</h3>
+            <div class="stat-highlight">{{ patterns.stability_index }} v.</div>
+            <p class="insight-text">Standard deviation of daily scores. Lower variance = stable.</p>
+        </div>
+
+        <!-- Time To First Distraction -->
+        <div class="card status-card animate-in">
+            <h3>⚔️ Time to First Betrayal</h3>
+            <div class="stat-highlight">{{ patterns.ttfd }} Min</div>
+            <p class="insight-text">Avg time from first work app to first social app.</p>
+        </div>
+
+        <!-- Relapse Risk -->
+        <div class="card score-card animate-in" style="grid-column: span 2;">
+            <h3>☠️ Relapse Curse Rating</h3>
+            <div class="score-display">
+                {% if patterns.relapse_risk == 'HIGH' %}
+                <span class="score-value"
+                    style="background:linear-gradient(135deg,#dc2626,#ef4444); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{
+                    patterns.relapse_risk }}</span>
+                {% elif patterns.relapse_risk == 'MEDIUM' %}
+                <span class="score-value"
+                    style="background:linear-gradient(135deg,#d97706,#f59e0b); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{
+                    patterns.relapse_risk }}</span>
+                {% else %}
+                <span class="score-value"
+                    style="background:linear-gradient(135deg,#059669,#10b981); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">{{
+                    patterns.relapse_risk }}</span>
+                {% endif %}
+            </div>
+            <p class="insight-text">Based on your late-night usage and context switches.</p>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="dashboard-grid" style="margin-bottom:1.5rem;">
+
+        <!-- Heatmap — full width -->
+        <div class="card full-width animate-in">
+            <h3>🔥 Hourly Battle Heatmap</h3>
+            <canvas id="heatmapChart" style="max-height:280px;"></canvas>
+        </div>
+
+        <!-- Weekly usage -->
+        <div class="card chart-large animate-in">
+            <h3>📜 Weekly Siege Log</h3>
+            <canvas id="usageChart" style="max-height:260px;"></canvas>
+        </div>
+
+        <!-- Category breakdown -->
+        <div class="card chart-small animate-in">
+            <h3>⚖️ Vice Reckoning</h3>
+            <canvas id="categoryChart" style="max-height:260px;"></canvas>
+        </div>
+
+    </div>
+
+    <!-- Smart Nudges -->
+    <div class="card nudge-card full-width animate-in">
+        <h3>🧙 The Oracle Speaks</h3>
+        <ul class="nudge-list">
+            <li>
+                <strong>Actionable Insight:</strong> Your usage peaks between <strong>{{ patterns.peak_window
+                    }}</strong>.
+                Consider scheduling 15 minutes of meditation at {{ patterns.peak_window.split('-')[0] }}:00.
+            </li>
+            <li>
+                <strong>Gamification:</strong> Reach 2 hours of 'Productivity' today to earn +50 focus points!
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // --- Data Initialization ---
+    const hourlyData = {{ patterns.hourly_data | tojson | safe }};
+    const hourlyLabels = Object.keys(hourlyData);
+    const hourlyValues = Object.values(hourlyData);
+
+    const categoryDataMap = {{ patterns.category_data | tojson | safe }};
+    const categoryLabels = Object.keys(categoryDataMap);
+    const categoryValues = Object.values(categoryDataMap);
+
+    const heatmapObj = {{ patterns.heatmap | tojson | safe }};
+    const heatmapLabels = Object.keys(heatmapObj).sort();
+    const heatmapProd = heatmapLabels.map(hour => heatmapObj[hour].prod);
+    const heatmapDist = heatmapLabels.map(hour => heatmapObj[hour].dist);
+
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.55)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+
+    const gridColor = 'rgba(255,255,255,0.06)';
+
+    // 1. Heatmap Chart
+    new Chart(document.getElementById('heatmapChart'), {
+        type: 'bar',
+        data: {
+            labels: heatmapLabels.map(h => h + ':00'),
+            datasets: [
+                {
+                    label: 'Productivity (Deep Work)',
+                    data: heatmapProd,
+                    backgroundColor: 'rgba(16,185,129,0.75)',
+                    borderRadius: 4,
+                    borderSkipped: false,
+                },
+                {
+                    label: 'Distraction (Social/Entertainment)',
+                    data: heatmapDist,
+                    backgroundColor: 'rgba(239,68,68,0.75)',
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true, grid: { color: gridColor }, border: { color: gridColor } },
+                y: { stacked: true, grid: { color: gridColor }, border: { color: gridColor } }
+            },
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 20 } },
+                tooltip: { mode: 'index', intersect: false }
+            }
+        }
+    });
+
+    // 2. Weekly Usage Trend
+    const usageCtx = document.getElementById('usageChart').getContext('2d');
+    const usageData = {{ trends | tojson }};
+    new Chart(usageCtx, {
+        type: 'line',
+        data: {
+            labels: usageData.map(d => d.date),
+            datasets: [{
+                label: 'Usage (min)',
+                data: usageData.map(d => d.minutes),
+                borderColor: '#818cf8',
+                backgroundColor: 'rgba(99,102,241,0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 2.5,
+                pointBackgroundColor: '#818cf8',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: gridColor }, border: { color: gridColor }, ticks: { color: 'rgba(255,255,255,0.45)' } },
+                x: { grid: { display: false }, border: { color: gridColor }, ticks: { color: 'rgba(255,255,255,0.45)' } }
+            }
+        }
+    });
+
+    // 3. Category Donut
+    const catCtx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(catCtx, {
+        type: 'doughnut',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                data: categoryValues,
+                backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#6366f1', '#22d3ee'],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '65%',
+            plugins: {
+                legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.55)', usePointStyle: true, pointStyle: 'circle', padding: 16 } }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
