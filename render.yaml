@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: bug-bashers-flask-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    preDeployCommand: "python init_db.py"
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bug-bashers-db
+          property: connectionString
+
+databases:
+  - name: bug-bashers-db
+    databaseName: bug_bashers
+    user: db_user
