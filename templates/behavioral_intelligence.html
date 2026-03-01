@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .intel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .intel-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+    }
+
+    .intel-header h1 {
+        font-size: 2.5rem;
+        background: linear-gradient(90deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .ai-insight-box {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .ai-insight-box h3 {
+        color: #818cf8;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .archetype-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .volatility-meter {
+        width: 100%;
+        height: 8px;
+        background: #334155;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+
+    .volatility-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+    }
+
+    .sql-verification {
+        background: #0f172a;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        padding: 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .sql-verification summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #94a3b8;
+        outline: none;
+    }
+
+    .sql-code {
+        background: #000;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: monospace;
+        color: #a5b4fc;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        white-space: pre-wrap;
+    }
+</style>
+
+<div class="page-title" style="margin-bottom:2rem;">
+    <span class="page-icon">🧠</span>
+    <div>
+        <h1>Intelligence Laboratory</h1>
+        <p style="color:var(--parchment-muted);font-size:0.9rem;margin-top:0.2rem;font-style:italic;">Deep pattern
+            recognition and cognitive profiling</p>
+    </div>
+</div>
+
+{% if intel.archetype == "New User" %}
+<div style="max-width:700px;margin:2rem auto;text-align:center;">
+    <div class="card"
+        style="padding:3rem 2.5rem;border-color:var(--torch-gold);background:linear-gradient(135deg,rgba(100,65,10,0.25),rgba(40,25,5,0.35));">
+        <div style="font-size:4rem;margin-bottom:1.25rem;">🧿</div>
+        <h2
+            style="font-family:'Cinzel Decorative',serif;color:var(--torch-bright);font-size:1.4rem;margin-bottom:0.75rem;text-shadow:0 0 14px rgba(245,200,66,0.4);">
+            The Oracle Has No Visions Yet
+        </h2>
+        <p style="color:var(--parchment-dim);max-width:480px;margin:0 auto 0.5rem;font-style:italic;line-height:1.8;">
+            The Intelligence Laboratory requires at least seven cycles of browsing data before it can construct
+            your cognitive profile. The Arcane Extension must first be installed and bound to your identity.
+        </p>
+        <p style="color:var(--parchment-muted);font-size:0.85rem;margin-bottom:2rem;font-style:italic;">
+            ⌛ Already installed? Browse for a few minutes and return here.
+        </p>
+        <a href="{{ url_for('get_extension') }}" class="btn btn-primary btn-lg" id="intel-get-ext-btn">
+            🧩 Acquire the Extension
+        </a>
+    </div>
+</div>
+{% else %}
+
+<!-- AI Insight Generator -->
+<div class="ai-insight-box">
+    <h3><span style="font-size: 1.5rem;">🤖</span> Neural Insight Engine</h3>
+    <div class="archetype-badge">{{ intel.archetype }}</div>
+    <p style="line-height: 1.6; margin-bottom: 1rem; font-size: 1.1rem;">{{ intel.ai_insight_text | safe }}</p>
+
+    <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+        <h4 style="color: #cbd5e1; margin-bottom: 0.5rem;">Recommended Protocols:</h4>
+        <ul style="color: #94a3b8; padding-left: 1.5rem;">
+            <li>{{ intel.ai_action_1 }}</li>
+            <li>{{ intel.ai_action_2 }}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="intel-grid">
+    <!-- 1. Deep Work Record -->
+    <div class="card score-card">
+        <h3>Deep Work Record <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 1)</span></h3>
+        <div class="score-display">
+            <span class="score-value">{{ intel.deep_work_record }}</span>
+            <span class="score-max">Min</span>
+        </div>
+        <p class="insight-text">Longest uninterrupted productivity span this week.</p>
+    </div>
+
+    <!-- 2. Distraction Burst Index -->
+    <div class="card status-card">
+        <h3>Distraction Burst Index <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 2)</span>
+        </h3>
+        <div class="stat-highlight">{{ intel.burst_index }}</div>
+        <p>Average category switches per 3-hour interval.</p>
+    </div>
+
+    <!-- 3. Scroll Velocity -->
+    <div class="card streak-card">
+        <h3>Scroll Velocity <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 3)</span></h3>
+        <div class="stat-highlight">{{ intel.scroll_velocity }} Ops</div>
+        <p>Total recorded micro-sessions in the database.</p>
+    </div>
+
+    <!-- 4. Late Night Dopamine -->
+    <div class="card status-card"
+        style="border-top: 3px solid {% if intel.late_night > 60 %}#ef4444{% else %}#10b981{% endif %};">
+        <h3>Late Night Dopamine <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 4)</span>
+        </h3>
+        <div class="stat-highlight">{{ intel.late_night }} Min</div>
+        <p>Screen time logged between 23:00 and 02:00.</p>
+    </div>
+
+    <!-- 5. Weekly Focus Growth -->
+    <div class="card score-card">
+        <h3>Weekly Focus Growth <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 5)</span>
+        </h3>
+        <div class="score-display">
+            <span class="score-value {% if intel.focus_growth > 0 %}success{% else %}warning{% endif %}">
+                {% if intel.focus_growth > 0 %}▲{% else %}▼{% endif %} {{ intel.focus_growth }}
+            </span>
+            <span class="score-max">%</span>
+        </div>
+        <p class="insight-text">Productivity variation vs previous 7-day trailing period.</p>
+    </div>
+
+    <!-- 6. App Dominance Ratio -->
+    <div class="card status-card">
+        <h3>App Dominance <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 6)</span></h3>
+        <div class="stat-highlight">{{ intel.app_dominance }}%</div>
+        <p><strong>{{ intel.top_app }}</strong> monopolizes your attention.</p>
+    </div>
+
+    <!-- 7. Attention Fragmentation -->
+    <div class="card streak-card">
+        <h3>Fragmentation Score <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 7)</span>
+        </h3>
+        <div class="stat-highlight">{{ intel.fragmentation }}</div>
+        <p>Active intervals per waking hour. Lower is healthier.</p>
+    </div>
+
+    <!-- 9. Relapse Risk -->
+    <div class="card status-card">
+        <h3>Relapse Risk <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 9)</span></h3>
+        <div
+            class="stat-highlight {% if intel.relapse_risk == 'HIGH' %}warning{% elif intel.relapse_risk == 'LOW' %}success{% endif %}">
+            {{ intel.relapse_risk }}
+        </div>
+        <p>Calculated multi-variate risk of falling into high-dopamine spirals.</p>
+    </div>
+
+    <!-- 10. Dopamine Stability -->
+    <div class="card score-card">
+        <h3>Dopamine Stability <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 10)</span>
+        </h3>
+        <div class="score-display">
+            <span class="score-value">{{ intel.stability_index }}</span>
+        </div>
+        <div class="volatility-meter">
+            <div class="volatility-fill"
+                style="width: {% if intel.stability_index < 50 %}{{ intel.stability_index * 2 }}{% else %}100{% endif %}%;">
+            </div>
+        </div>
+        <p class="insight-text" style="margin-top: 0.5rem;">Standard deviation of daily scores.</p>
+    </div>
+
+    <!-- 11. Block Quality -->
+    <div class="card streak-card">
+        <h3>Block Quality <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 11)</span></h3>
+        <div class="stat-highlight">{{ intel.block_quality }}</div>
+        <p>Average focus quality penalized heavily by context switches.</p>
+    </div>
+
+    <!-- 12. Time to First Distraction -->
+    <div class="card status-card">
+        <h3>1st Distraction TTFD <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric 12)</span>
+        </h3>
+        <div class="stat-highlight">{{ intel.ttfd }}</div>
+        <p>Minutes elapsed from first work session to first distraction sequence.</p>
+    </div>
+</div>
+
+<!-- Correlation Engine & Heatmap (Metric 8) -->
+<div class="intel-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="card chart-large">
+        <h3>Correlation Engine <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Pearson
+                Coefficients)</span></h3>
+        <div style="margin-top: 1rem;">
+            {% for corr in intel.correlations %}
+            <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <strong>{{ corr.name }}</strong>
+                    <span
+                        style="color: {% if corr.value > 0 %}#f59e0b{% elif corr.value < 0 %}#10b981{% else %}#94a3b8{% endif %}; font-weight: bold;">
+                        {{ corr.value }} r
+                    </span>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">{{ corr.interpretation }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card chart-large" style="grid-column: span 1;">
+        <h3>Hourly Distraction Heatmap <span style="font-size: 0.8rem; font-weight: 400; color: #64748b;">(Metric
+                8)</span></h3>
+        <canvas id="intelHeatmapChart"></canvas>
+    </div>
+</div>
+
+<!-- Manual Verification Guide -->
+<details class="sql-verification">
+    <summary>🧪 How to Manually Verify These Metrics (SQL Guide)</summary>
+    <div style="margin-top: 1.5rem; color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">
+        <p>This intelligence dashboard relies on complex aggregations in SQLAlchemy. To independently verify the raw
+            correctness of the data, developers or professors can query the SQLite database directly using the following
+            SQL examples.</p>
+
+        <h4 style="margin-top: 1.5rem; color: #fff;">1. Deep Work Record</h4>
+        <div class="sql-code">SELECT user_id, MAX(duration_minutes)
+            FROM app_usage
+            WHERE category = 'Productivity'
+            AND timestamp >= datetime('now', '-7 days')
+            GROUP BY user_id;</div>
+
+        <h4 style="margin-top: 1rem; color: #fff;">2. Distraction Burst Index</h4>
+        <div class="sql-code">-- 1. Count category switches per interval_id manually
+            -- 2. Count distinct interval_ids
+            -- 3. Divide switches / intervals for the raw score</div>
+
+        <h4 style="margin-top: 1rem; color: #fff;">4. Late Night Dopamine Index</h4>
+        <div class="sql-code">SELECT sum(duration_minutes)
+            FROM app_usage
+            WHERE user_id = [YOUR_ID]
+            AND (CAST(strftime('%H', timestamp) AS INTEGER) >= 23
+            OR CAST(strftime('%H', timestamp) AS INTEGER) < 2);</div>
+
+                <h4 style="margin-top: 1rem; color: #fff;">6. App Dominance Ratio</h4>
+                <div class="sql-code">SELECT app_name, sum(duration_minutes) as num
+                    FROM app_usage
+                    WHERE timestamp >= datetime('now', '-7 days')
+                    GROUP BY app_name
+                    ORDER BY num DESC LIMIT 1;
+                    -- Then divide by total sum of duration_minutes for the week.</div>
+
+                <h4 style="margin-top: 1rem; color: #fff;">10. Dopamine Stability Index</h4>
+                <div class="sql-code">-- Calculate standard deviation manually in Python after taking sum array
+                    SELECT date(timestamp), sum(...)
+                    FROM app_usage
+                    GROUP BY date(timestamp);</div>
+        </div>
+</details>
+
+<script>
+    // Initialize Metric 8: Intel Heatmap Chart
+    const heatmapObj = {{ intel.heatmap | tojson | safe }};
+    const heatmapLabels = Object.keys(heatmapObj).sort(); // 00 to 23
+    const heatmapProd = heatmapLabels.map(hour => heatmapObj[hour].prod);
+    const heatmapDist = heatmapLabels.map(hour => heatmapObj[hour].dist);
+
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    new Chart(document.getElementById('intelHeatmapChart'), {
+        type: 'bar',
+        data: {
+            labels: heatmapLabels.map(h => h + ':00'),
+            datasets: [
+                {
+                    label: 'Deep Work',
+                    data: heatmapProd,
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)', // Green
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Distraction',
+                    data: heatmapDist,
+                    backgroundColor: 'rgba(239, 68, 68, 0.8)', // Red
+                    borderRadius: 4,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { mode: 'index', intersect: false }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

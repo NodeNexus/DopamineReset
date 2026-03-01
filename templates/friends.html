@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+
+    <!-- Page Header -->
+    <div style="text-align:center; margin-bottom:3rem;">
+        <div class="page-title" style="justify-content:center;">
+            <span class="page-icon">👥</span>
+            <div>
+                <h1>Neural Link Protocol</h1>
+                <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.2rem;">Establish connections with
+                    other nodes in the network.</p>
+            </div>
+        </div>
+        <div class="hex-display" style="margin-top:1rem;">
+            <span class="hex-label"><i class="bi bi-node-plus"></i> Your Node Identifier</span>
+            <span class="hex-code">{{ user.hex_code }}</span>
+        </div>
+    </div>
+
+    <!-- Connect Form -->
+    <div style="display:flex; justify-content:center; margin-bottom:3rem;">
+        <div class="card connect-form-card" style="width:100%;max-width:520px; padding:0; overflow:hidden;">
+            <div class="connect-form-header">
+                <i class="bi bi-search"></i> Initiate Connection
+            </div>
+            <div style="padding:1.75rem;">
+                <form method="POST" action="{{ url_for('friends') }}">
+                    <div class="form-group">
+                        <label for="hex_code"><i class="bi bi-heptagon-half" style="margin-right:0.35rem;"></i>Target
+                            Node Hex Code</label>
+                        <input type="text" id="hex_code" name="hex_code" placeholder="e.g. A1B2C3" maxlength="6"
+                            required
+                            style="font-family:'JetBrains Mono',monospace; font-size:1.15rem; letter-spacing:0.25em; text-transform:uppercase;">
+                    </div>
+                    <button type="submit" class="auth-btn" style="margin-bottom:0;">
+                        <i class="bi bi-lightning-charge-fill"></i> Establish Link
+                    </button>
+                </form>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div
+                    style="margin-top:1rem; padding:0.85rem 1rem; background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.2); border-radius:var(--radius-md); font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--accent-cyan);">
+                    &gt; {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Connections -->
+    <div>
+        <h3
+            style="font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; border-bottom:1px solid var(--border-color); padding-bottom:0.875rem; margin-bottom:1.5rem;">
+            <i class="bi bi-diagram-3" style="margin-right:0.4rem;"></i>
+            Active Connections ({{ user.friends.count() }})
+        </h3>
+
+        {% if user.friends.count() == 0 %}
+        <div
+            style="text-align:center; padding:4rem 2rem; background:rgba(255,255,255,0.02); border:1px dashed var(--border-color); border-radius:var(--radius-xl);">
+            <i class="bi bi-wifi-off"
+                style="font-size:3rem; color:var(--text-muted); display:block; margin-bottom:1rem;"></i>
+            <p style="font-family:'JetBrains Mono',monospace; color:var(--text-muted); font-size:0.875rem;">
+                &gt; No established links found. Initiate a connection above.
+            </p>
+        </div>
+        {% else %}
+        <div class="friends-grid">
+            {% for friend in user.friends %}
+            <div class="friend-card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+                    <div>
+                        <a href="{{ url_for('friend_profile', hex_code=friend.hex_code) }}" class="friend-card-name">
+                            <i class="bi bi-person-circle" style="margin-right:0.4rem; color:var(--primary-light);"></i>
+                            {{ friend.username }}
+                        </a>
+                        <div class="friend-connected-badge">
+                            <i class="bi bi-check-circle-fill"></i> Connected
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div
+                            style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:0.25rem;">
+                            Points</div>
+                        <div
+                            style="font-family:'JetBrains Mono',monospace; font-size:1.2rem; font-weight:700; color:var(--accent-cyan);">
+                            {{ friend.total_points }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

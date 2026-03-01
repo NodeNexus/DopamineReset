@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+
+    <!-- Back link -->
+    <a href="{{ url_for('friends') }}" class="back-link">
+        <i class="bi bi-arrow-left"></i> Return to Network
+    </a>
+
+    <!-- Header -->
+    <div class="page-title" style="margin-bottom:1.5rem;">
+        <span class="page-icon">🔎</span>
+        <div>
+            <h1>Node Profile Analysis</h1>
+            <p style="color:var(--text-secondary);font-size:0.875rem;margin-top:0.2rem;">Authorized Network Peer — {{
+                friend.username }}</p>
+        </div>
+    </div>
+
+    <!-- Security Alert -->
+    <div class="security-alert" style="margin-bottom:2rem;">
+        <i class="bi bi-shield-lock-fill" style="margin-right:0.5rem;"></i>
+        SECURITY CLEARANCE: LEVEL 2<br>
+        <span style="color:var(--text-muted); font-size:0.78rem;">
+            [Granular temporal telemetry is encrypted to preserve peer privacy. Displaying aggregated metrics only.]
+        </span>
+    </div>
+
+    <!-- Identity -->
+    <div class="card"
+        style="margin-bottom:1.75rem; background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(99,102,241,0.04));">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">
+            <div>
+                <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:0.25rem; color:var(--primary-light);">{{
+                    friend.username }}</h2>
+                <p style="color:var(--text-muted); font-size:0.82rem;">Authorized Network Peer</p>
+            </div>
+            <div class="hex-display">
+                <span class="hex-label">Target Identifier</span>
+                <span class="hex-code" style="font-size:1.5rem;">{{ friend.hex_code }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stat-cards-grid">
+        <div class="stat-card">
+            <div class="stat-num" style="color:var(--accent-green);">{{ friend.total_points }}</div>
+            <div class="stat-label">Lifetime Points</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" style="color:var(--primary-light);">{{ friend.current_streak }}</div>
+            <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" style="color:var(--accent-red); font-size:1.75rem;">{{ top_app }}</div>
+            <div class="stat-label">Primary Attention Sink</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

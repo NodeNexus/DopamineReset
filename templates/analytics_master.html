@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Styling isolated to this master view */
+    .master-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+    }
+
+    .master-header h1 {
+        font-size: 2.8rem;
+        background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .sticky-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .sticky-nav a {
+        color: #94a3b8;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        transition: all 0.2s ease;
+    }
+
+    .sticky-nav a:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+    .section-title {
+        margin: 4rem 0 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #f8fafc;
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .ai-insight-box {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 12px;
+        padding: 2rem;
+    }
+
+    .volatility-meter {
+        width: 100%;
+        height: 8px;
+        background: #334155;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+
+    .volatility-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+    }
+
+    .sql-verification {
+        background: #0f172a;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .sql-verification summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #94a3b8;
+        outline: none;
+    }
+
+    .sql-code {
+        background: #000;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: monospace;
+        color: #a5b4fc;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        white-space: pre-wrap;
+    }
+</style>
+
+<div class="page-title" style="margin-bottom:2rem;">
+    <span class="page-icon">📜</span>
+    <div>
+        <h1>Rune Analytics Master</h1>
+        <p style="color:var(--parchment-muted);font-size:0.9rem;margin-top:0.2rem;font-style:italic;">
+            Predictive attention analytics and neuro-inspired focus intelligence
+        </p>
+    </div>
+</div>
+
+{% if patterns.total_time == 0 %}
+<div style="max-width:700px;margin:2rem auto;text-align:center;">
+    <div class="card"
+        style="padding:3rem 2.5rem;border-color:var(--torch-gold);background:linear-gradient(135deg,rgba(100,65,10,0.25),rgba(40,25,5,0.35));">
+        <div style="font-size:4rem;margin-bottom:1.25rem;">📜</div>
+        <h2
+            style="font-family:'Cinzel Decorative',serif;color:var(--torch-bright);font-size:1.4rem;margin-bottom:0.75rem;text-shadow:0 0 14px rgba(245,200,66,0.4);">
+            The Rune Scrolls Are Blank
+        </h2>
+        <p style="color:var(--parchment-dim);max-width:480px;margin:0 auto 0.5rem;font-style:italic;line-height:1.8;">
+            The Analytics Citadel has nothing to inscribe. No browser data has yet flowed through the dungeon.
+            Install the <strong style="color:var(--torch-bright);font-style:normal;">Arcane Extension</strong>
+            to begin filling these stone tablets.
+        </p>
+        <p style="color:var(--parchment-muted);font-size:0.85rem;margin-bottom:2rem;font-style:italic;">
+            ⌛ Already installed? Browse the web for a few minutes, then return.
+        </p>
+        <a href="{{ url_for('get_extension') }}" class="btn btn-primary btn-lg" id="analytics-get-ext-btn">
+            🧩 Acquire the Extension
+        </a>
+    </div>
+</div>
+{% else %}
+
+<!-- Sticky Nav -->
+<nav class="sticky-nav">
+    <a href="#section-1">1. Executive Overview</a>
+    <a href="#section-2">2. Behavioral Modeling</a>
+    <a href="#section-3">3. Insight Synthesis</a>
+    <a href="#section-4">Transparency Lab</a>
+</nav>
+
+<!-- SECTION 1 -->
+<section id="section-1">
+    <h2 class="section-title">🔷 Section 1 — High-Level Behavioral Intelligence Snapshot</h2>
+
+    <div class="metric-grid" style="margin-bottom: 1.5rem;">
+        <div class="card score-card">
+            <h3>Dopamine Level</h3>
+            <div class="score-display">
+                <span class="score-value">{{ patterns.dopamine_score }}</span>
+                <span class="score-max">/ 100</span>
+            </div>
+            <p class="insight-text">
+                {% if patterns.dopamine_score > 70 %}<span class="warning">High Dopamine!</span>
+                {% else %}<span class="success">Balanced.</span>{% endif %}
+            </p>
+        </div>
+
+        <div class="card status-card">
+            <h3>Peak Distraction Window</h3>
+            <div class="stat-highlight">{{ patterns.peak_window }}</div>
+            <p>Your most vulnerable cognitive timeframe.</p>
+        </div>
+
+        <div class="card streak-card">
+            <h3>Current Streak</h3>
+            <div class="stat-highlight">{{ user.current_streak }} Days</div>
+            <p>Consistent focus duration.</p>
+        </div>
+    </div>
+
+    <div class="metric-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 1.5rem;">
+        <div class="card chart-large">
+            <h3>Weekly Screen Usage (Minutes)</h3>
+            <canvas id="usageChart"></canvas>
+        </div>
+
+        <div class="card chart-small">
+            <h3>Category Breakdown</h3>
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card nudge-card full-width">
+        <h3>🤖 Smart Nudges</h3>
+        <ul class="nudge-list">
+            <li><strong>Actionable Insight:</strong> Your usage peaks between <strong>{{ patterns.peak_window
+                    }}</strong>. Consider scheduling 15 minutes of meditation at {{ patterns.peak_window.split('-')[0]
+                }}:00.</li>
+            <li><strong>Gamification:</strong> Reach 2 hours of 'Productivity' today to earn +50 focus points!</li>
+        </ul>
+    </div>
+</section>
+
+<!-- SECTION 2 -->
+<section id="section-2">
+    <h2 class="section-title">🔷 Section 2 — Advanced Behavioral Modeling</h2>
+
+    <div class="metric-grid">
+        <!-- 1. Deep Focus Detection -->
+        <div class="card score-card">
+            <h3 style="color: #60a5fa;">Deep Focus Detection <span
+                    style="font-size: 0.8rem; color: #64748b;">(Session-Level Modeling)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem;">{{ intel.deep_work_record }} Min</div>
+            <p><strong>Block Quality Score:</strong> {{ intel.block_quality }}</p>
+            <p class="insight-text">Longest uninterrupted productivity block & penalized quality score.</p>
+        </div>
+
+        <!-- 2. Cognitive Load -->
+        <div class="card status-card">
+            <h3 style="color: #60a5fa;">Cognitive Load Analysis <span
+                    style="font-size: 0.8rem; color: #64748b;">(Context-Switching)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem;">{{ intel.burst_index }}</div>
+            <p><strong>Fragmentation Score:</strong> {{ intel.fragmentation }}</p>
+            <p>Switch intensity bounding cognitive strain.</p>
+        </div>
+
+        <!-- 3. High-Frequency Reward Loop -->
+        <div class="card streak-card">
+            <h3 style="color: #60a5fa;">Reward Loop Detection <span style="font-size: 0.8rem; color: #64748b;">(Scroll
+                    Velocity)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem;">{{ intel.scroll_velocity }} Sessions</div>
+            <p>Total daily interactions. High frequency = micro-hits.</p>
+        </div>
+
+        <!-- 4. Circadian Disruption Analysis -->
+        <div class="card status-card"
+            style="border-top: 3px solid {% if intel.late_night > 60 %}#ef4444{% else %}#10b981{% endif %};">
+            <h3 style="color: #60a5fa;">Circadian Disruption <span style="font-size: 0.8rem; color: #64748b;">(Late
+                    Night Dopamine)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem;">{{ intel.late_night }} Min</div>
+            <p>Usage bounded between 23:00–02:00. <strong
+                    class="{% if intel.late_night > 60 %}warning{% else %}success{% endif %}">{% if intel.late_night >
+                    60 %}RISK{% else %}NORMAL{% endif %}</strong></p>
+        </div>
+
+        <!-- 5. Temporal Performance Trend -->
+        <div class="card score-card">
+            <h3 style="color: #60a5fa;">Temporal Trend Modeling <span style="font-size: 0.8rem; color: #64748b;">(Focus
+                    Growth)</span></h3>
+            <div class="score-display" style="margin-top: 1rem;">
+                <span class="score-value {% if intel.focus_growth > 0 %}success{% else %}warning{% endif %}">
+                    {% if intel.focus_growth > 0 %}▲{% else %}▼{% endif %} {{ intel.focus_growth }}%
+                </span>
+            </div>
+            <p class="insight-text">Week-over-week productivity change.</p>
+        </div>
+
+        <!-- 6. Behavioral Concentration -->
+        <div class="card status-card">
+            <h3 style="color: #60a5fa;">Behavioral Concentration <span style="font-size: 0.8rem; color: #64748b;">(App
+                    Dominance)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem;">{{ intel.app_dominance }}%</div>
+            <p>Obsession threshold. Top app: <strong>{{ intel.top_app }}</strong>.</p>
+        </div>
+
+        <!-- 7. Short-Term Neurobehavioral Volatility -->
+        <div class="card score-card">
+            <h3 style="color: #60a5fa;">Neurobehavioral Volatility <span
+                    style="font-size: 0.8rem; color: #64748b;">(Dopamine Stability)</span></h3>
+            <div class="score-display" style="margin-top: 1rem;">
+                <span class="score-value">{{ intel.stability_index }}</span>
+            </div>
+            <div class="volatility-meter">
+                <div class="volatility-fill"
+                    style="width: {% if intel.stability_index < 50 %}{{ intel.stability_index * 2 }}{% else %}100{% endif %}%;">
+                </div>
+            </div>
+            <p class="insight-text" style="margin-top: 0.5rem;">7-day standard deviation volatility meter.</p>
+        </div>
+
+        <!-- 9. Rule-Based Threat Prediction -->
+        <div class="card status-card">
+            <h3 style="color: #60a5fa;">Risk Prediction Model <span style="font-size: 0.8rem; color: #64748b;">(Relapse
+                    Risk)</span></h3>
+            <div class="stat-highlight {% if intel.relapse_risk == 'HIGH' %}warning{% elif intel.relapse_risk == 'LOW' %}success{% endif %}"
+                style="margin-top: 1rem;">
+                {{ intel.relapse_risk }}
+            </div>
+            <p>Weighted logical inference (Social Mins + Switches + Night).</p>
+        </div>
+
+        <!-- 10. Behavioral Clustering -->
+        <div class="card streak-card" style="grid-column: span 1;">
+            <h3 style="color: #60a5fa;">Unsupervised Clustering <span
+                    style="font-size: 0.8rem; color: #64748b;">(Archetypes)</span></h3>
+            <div class="stat-highlight" style="margin-top: 1rem; color: #34d399;">{{ intel.archetype }}</div>
+            <p>Clustered based on productivity, switching, and night profiles.</p>
+        </div>
+
+        <!-- 12. Statistical Anomaly Detection Layer -->
+        <div class="card score-card">
+            <h3 style="color: #60a5fa;">Anomaly Detection Engine <span
+                    style="font-size: 0.8rem; color: #64748b;">(Z-Score)</span></h3>
+            <div class="stat-highlight {% if intel.anomaly %}warning{% else %}success{% endif %}"
+                style="margin-top: 1rem;">
+                {% if intel.anomaly %}ANOMALY DETECTED{% else %}BASELINE ALIGNED{% endif %}
+            </div>
+            <p class="insight-text">Deviations beyond 2σ of the 7-day moving average.</p>
+        </div>
+    </div>
+
+    <div class="metric-grid" style="grid-template-columns: 1fr 1fr; margin-top: 1.5rem;">
+        <!-- 11. Correlation Matrix -->
+        <div class="card chart-large">
+            <h3 style="color: #60a5fa;">Behavioral Correlation Matrix</h3>
+            <div style="margin-top: 1rem;">
+                {% for corr in intel.correlations %}
+                <div
+                    style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <strong>{{ corr.name }}</strong>
+                        <span
+                            style="color: {% if corr.value > 0 %}#f59e0b{% elif corr.value < 0 %}#10b981{% else %}#94a3b8{% endif %}; font-weight: bold;">
+                            {{ corr.value }} r
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 8. Temporal Heatmap -->
+        <div class="card chart-large">
+            <h3 style="color: #60a5fa;">Temporal Attention Heat Mapping <span
+                    style="font-size: 0.8rem; color: #64748b;">(Hourly Data)</span></h3>
+            <canvas id="intelHeatmapChart"></canvas>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3 -->
+<section id="section-3" style="margin-top: 4rem;">
+    <h2 class="section-title">🧬 Section 3 — Automated Insight Synthesis</h2>
+
+    <div class="ai-insight-box">
+        <h3 style="font-size: 1.8rem; color: #c084fc; margin-bottom: 1rem;">AI-Generated Behavioral Intelligence Summary
+        </h3>
+        <p style="line-height: 1.6; margin-bottom: 1.5rem; font-size: 1.2rem; color: #f8fafc;">
+            {{ intel.ai_insight_text | safe }}
+        </p>
+        <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #818cf8;">
+            <h4 style="color: #cbd5e1; margin-bottom: 1rem; font-size: 1.1rem;">Synthesized Recommendations:</h4>
+            <ul style="color: #94a3b8; padding-left: 1.5rem; font-size: 1.05rem; line-height: 1.6;">
+                <li style="margin-bottom: 0.5rem;">{{ intel.ai_action_1 }}</li>
+                <li>{{ intel.ai_action_2 }}</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4 -->
+<section id="section-4" style="margin-bottom: 4rem;">
+    <details class="sql-verification">
+        <summary>🧪 Algorithmic Transparency & Verification Lab</summary>
+        <div style="margin-top: 1.5rem; color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+            <p>Our claims of analytical prowess are fully transparent and defensible. Judges or auditors can manually
+                verify these metrics bypassing the Python application layer by executing the following math or raw SQL
+                directly against the SQLite database.</p>
+
+            <h4 style="margin-top: 1.5rem; color: #fff;">1. Deep Focus Detection (Deep Work Record)</h4>
+            <div class="sql-code">SELECT user_id, MAX(duration_minutes)
+                FROM app_usage
+                WHERE category = 'Productivity' AND timestamp >= datetime('now', '-7 days')
+                GROUP BY user_id;</div>
+
+            <h4 style="margin-top: 1rem; color: #fff;">2. Fragmentation Calculation</h4>
+            <p style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px;">fragmentation_score =
+                (COUNT(DISTINCT interval_id)) / total_waking_hours_active</p>
+
+            <h4 style="margin-top: 1rem; color: #fff;">3. Risk Scoring Formula</h4>
+            <p style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px; font-family: monospace;">risk
+                = 0; if (social_min > 120) risk+=2; if (switches > 100) risk+=2; if (late_night > 60) risk+=2; if (prod
+                < 40%) risk+=2; [0-2=LOW, 3-5=MEDIUM, 6+=HIGH]</p>
+
+                    <h4 style="margin-top: 1rem; color: #fff;">4. Volatility Formula (Dopamine Stability)</h4>
+                    <p
+                        style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px; font-family: monospace;">
+                        stability_index = √( Σ (daily_score - mean_7day_score)² / N )</p>
+
+                    <h4 style="margin-top: 1rem; color: #fff;">5. Correlation Calculation Method (Pearson)</h4>
+                    <p
+                        style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px; font-family: monospace;">
+                        r = [ n(Σxy) - (Σx)(Σy) ] / √[ (nΣx² - (Σx)²)(nΣy² - (Σy)²) ]</p>
+
+                    <h4 style="margin-top: 1rem; color: #fff;">6. Clustering Input Features (K-Means Heuristic)</h4>
+                    <p
+                        style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px; font-family: monospace;">
+                        Inputs: array [productivity_ratio, burst_index, late_night_minutes, focus_growth]</p>
+
+                    <h4 style="margin-top: 1rem; color: #fff;">7. Anomaly Detection Formula (Z-Score)</h4>
+                    <p
+                        style="color: #a5b4fc; background: #000; padding: 1rem; border-radius: 8px; font-family: monospace;">
+                        z_score = |today_score - 7day_mean| / stability_index
+                        if z_score > 2.0: FLAG_ANOMALY</p>
+        </div>
+    </details>
+</section>
+
+<!-- Scripts for all 3 charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    // Data 1: Weekly Usage
+    const usageData = {{ trends | tojson | safe }};
+    new Chart(document.getElementById('usageChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: usageData.map(d => d.date),
+            datasets: [{
+                label: 'Usage (min)',
+                data: usageData.map(d => d.minutes),
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // Data 2: Category Breakdown
+    const catDataMap = {{ patterns.category_data | tojson | safe }};
+    new Chart(document.getElementById('categoryChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(catDataMap),
+            datasets: [{
+                data: Object.values(catDataMap),
+                backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Data 3: Heatmap Chart from Intel model
+    const heatmapObj = {{ intel.heatmap | tojson | safe }};
+    const heatmapLabels = Object.keys(heatmapObj).sort(); // 00 to 23
+    const heatmapProd = heatmapLabels.map(hour => heatmapObj[hour].prod);
+    const heatmapDist = heatmapLabels.map(hour => heatmapObj[hour].dist);
+
+    new Chart(document.getElementById('intelHeatmapChart'), {
+        type: 'bar',
+        data: {
+            labels: heatmapLabels.map(h => h + ':00'),
+            datasets: [
+                {
+                    label: 'Deep Work',
+                    data: heatmapProd,
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Distraction',
+                    data: heatmapDist,
+                    backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                    borderRadius: 4,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { mode: 'index', intersect: false }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

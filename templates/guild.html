@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-warning mb-3 fw-bold text-uppercase" style="letter-spacing: 0.1em;">Guild Network</h2>
+        <p class="text-muted">Form alliances, compete with other syndicates, and optimize focus collectively.</p>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info py-2 border-info bg-black text-info font-monospace" role="alert">
+    > {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+{% if not guild %}
+<!-- Not in a guild: Show Create/Join forms -->
+<div class="row g-4 mb-5">
+    <!-- Join Guild -->
+    <div class="col-md-6">
+        <div class="card bg-dark border-info h-100">
+            <div class="card-header bg-info text-black text-uppercase fw-bold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Join Syndicate
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('guild_dashboard') }}">
+                    <input type="hidden" name="action" value="join">
+                    <div class="mb-3">
+                        <label class="form-label text-info font-monospace">Syndicate Access Code</label>
+                        <input type="text" class="form-control bg-black text-white border-secondary font-monospace"
+                            name="access_code" placeholder="Enter 8-character code" required
+                            style="letter-spacing: 0.1em; text-transform: uppercase;">
+                    </div>
+                    <button type="submit" class="btn btn-outline-info w-100 fw-bold">Request Access</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Guild -->
+    <div class="col-md-6">
+        <div class="card bg-dark border-warning h-100">
+            <div class="card-header bg-warning text-black text-uppercase fw-bold">
+                <i class="bi bi-plus-circle me-2"></i>Form Syndicate
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('guild_dashboard') }}">
+                    <input type="hidden" name="action" value="create">
+                    <div class="mb-3">
+                        <label class="form-label text-warning font-monospace">Syndicate Designation</label>
+                        <input type="text" class="form-control bg-black text-white border-secondary font-monospace"
+                            name="guild_name" placeholder="e.g. Neural Saboteurs" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">Initialize</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Active Guild Dashboard -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card bg-black border-warning shadow-lg">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <small class="text-uppercase text-secondary mb-1 d-block font-monospace">Active
+                            Syndicate</small>
+                        <h2 class="text-warning mb-0 fw-bold">{{ guild.name }}</h2>
+                        <div class="mt-3">
+                            <small class="text-muted d-block mb-1">Invite/Access Code:</small>
+                            <span
+                                class="user-select-all bg-dark text-white font-monospace px-3 py-2 rounded border border-secondary"
+                                style="letter-spacing: 0.2em;">{{ guild.access_code }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end mt-3 mt-md-0">
+                        <div class="p-3 border border-secondary rounded bg-dark mb-3 text-center">
+                            <small class="text-uppercase text-secondary d-block mb-1">Total Operatives</small>
+                            <h3 class="font-monospace text-white mb-0">{{ guild.members | length }}</h3>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('guild_dashboard') }}"
+                            onsubmit="return confirm('WARNING: Are you sure you want to sever connection with this syndicate?');">
+                            <input type="hidden" name="action" value="leave">
+                            {% if guild.leader_id == user.id %}
+                            <button type="button" class="btn btn-outline-secondary w-100 disabled"
+                                title="Leaders cannot leave yet">Leader Cannot Leave</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-outline-danger w-100">Sever Connection</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Syndicate Analytics -->
+<div class="row g-4 mb-4">
+    <div class="col-md-12">
+        <h4 class="text-secondary text-uppercase mb-3 font-monospace border-bottom border-secondary pb-2">Syndicate
+            Analytics</h4>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-black border-success h-100 p-3 text-center">
+            <h5 class="text-uppercase text-secondary font-monospace mb-3">Total Focus</h5>
+            <h2 class="text-success fw-bold">{{ guild_stats.total_productivity_hours }}<span
+                    class="fs-5 text-muted ms-1">hrs</span></h2>
+            <small class="text-muted">Collective Deep Work</small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-black border-danger h-100 p-3 text-center">
+            <h5 class="text-uppercase text-secondary font-monospace mb-3">Top Distraction</h5>
+            <h3 class="text-danger fw-bold my-auto" style="word-break: break-word;">{{ guild_stats.top_distraction }}
+            </h3>
+            <small class="text-muted mt-2">Primary Syndicate Entropy Source</small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-black border-info h-100 p-3 text-center">
+            <h5 class="text-uppercase text-secondary font-monospace mb-3">Net Impact</h5>
+            <h2 class="text-info fw-bold">{{ guild_stats.total_points }}</h2>
+            <small class="text-muted">Aggregated Dopamine Points</small>
+        </div>
+    </div>
+</div>
+
+<!-- Leaderboard -->
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="text-secondary text-uppercase mb-3 font-monospace border-bottom border-secondary pb-2">Internal
+            Rankings</h4>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover border-secondary">
+                <thead>
+                    <tr class="text-uppercase font-monospace text-secondary">
+                        <th scope="col" width="10%">Rank</th>
+                        <th scope="col" width="40%">Operative</th>
+                        <th scope="col" width="25%" class="text-end">Dopamine Points</th>
+                        <th scope="col" width="25%" class="text-end">Current Streak</th>
+                    </tr>
+                </thead>
+                <tbody class="font-monospace">
+                    {% for member in leaderboard %}
+                    <tr class="{% if member.id == user.id %}table-active border-primary{% endif %}">
+                        <td class="align-middle">
+                            {% if loop.index == 1 %}
+                            <span class="badge bg-warning text-black w-100 py-2">#1 PRIME</span>
+                            {% elif loop.index == 2 %}
+                            <span class="badge bg-secondary text-white w-100 py-2">#2</span>
+                            {% elif loop.index == 3 %}
+                            <span class="badge text-white w-100 py-2" style="background-color: #cd7f32;">#3</span>
+                            {% else %}
+                            <span class="text-muted px-2">#{{ loop.index }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle fs-5">
+                            {{ member.username }}
+                            {% if member.id == guild.leader_id %}
+                            <i class="bi bi-star-fill text-warning ms-2" title="Syndicate Leader"
+                                style="font-size: 0.8rem;"></i>
+                            {% endif %}
+                            {% if member.id == user.id %}
+                            <span class="badge bg-primary ms-2 border border-info" style="font-size: 0.6rem;">YOU</span>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle text-end text-success fs-5">{{ member.total_points }}</td>
+                        <td class="align-middle text-end text-info fs-5">{{ member.current_streak }} days</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

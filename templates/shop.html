@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+
+    <!-- Header -->
+    <div
+        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; margin-bottom:2.5rem;">
+        <div>
+            <div class="page-title" style="margin-bottom:0.25rem; padding-bottom:0; border-bottom:none;">
+                <span class="page-icon">🛡️</span>
+                <h1>The Armory</h1>
+            </div>
+            <p
+                style="color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.82rem; margin-top:0.4rem; margin-left:3.25rem;">
+                Exchange hard-earned Coins for permanent combat capabilities.
+            </p>
+        </div>
+        <div class="treasury-box">
+            <div class="treasury-label"><i class="bi bi-coin" style="margin-right:0.35rem;"></i>Treasury</div>
+            <div class="treasury-amount">{{ user.coins }}</div>
+            <div class="treasury-cap">Daily Cap: {{ user.daily_coins_earned }} / 100</div>
+        </div>
+    </div>
+
+    <!-- Equipment Grid -->
+    {% if equipment %}
+    <div class="armory-grid stagger">
+        {% for item in equipment %}
+        <div class="item-card animate-in">
+
+            {% if item in user.equipment %}
+            <div class="item-owned-overlay">
+                <span class="item-owned-stamp">OWNED</span>
+            </div>
+            {% endif %}
+
+            <!-- Icon by type -->
+            {% if item.type == 'Weapon' %}
+            <span class="item-icon" style="color:var(--accent-red);">⚔️</span>
+            {% elif item.type == 'Armor' %}
+            <span class="item-icon" style="color:var(--accent-cyan);">🛡️</span>
+            {% else %}
+            <span class="item-icon" style="color:var(--primary-light);">💎</span>
+            {% endif %}
+
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-type">{{ item.type }}</div>
+
+            <!-- Stat -->
+            <div
+                class="item-stat {% if item.effect_type == 'attack' %}atk{% elif item.effect_type == 'defense' %}def{% else %}spec{% endif %}">
+                {% if item.effect_type == 'attack' %}
+                <i class="bi bi-lightning-fill"></i> +{{ item.effect_value | int }} ATK
+                {% elif item.effect_type == 'defense' %}
+                <i class="bi bi-shield-fill"></i> +{{ item.effect_value | int }} DEF
+                {% else %}
+                <i class="bi bi-stars"></i> {{ item.effect_type | upper }}
+                {% endif %}
+            </div>
+
+            <form method="POST" action="{{ url_for('shop') }}">
+                <input type="hidden" name="equipment_id" value="{{ item.id }}">
+                <button type="submit" class="item-buy-btn">
+                    Buy &mdash; {{ item.cost }} <i class="bi bi-coin"></i>
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div
+        style="text-align:center; padding:5rem 2rem; background:rgba(255,255,255,0.02); border:1px dashed var(--border-color); border-radius:var(--radius-xl);">
+        <i class="bi bi-archive"
+            style="font-size:3rem; color:var(--text-muted); display:block; margin-bottom:1rem;"></i>
+        <h4 style="font-family:'JetBrains Mono',monospace; color:var(--text-muted); margin-bottom:0.5rem;">The armory is
+            currently empty.</h4>
+        <p style="color:var(--text-muted); font-size:0.85rem;">Admin: Equipment needs to be seeded into the database.
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
