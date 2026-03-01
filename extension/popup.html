@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body {
+      font-family: system-ui;
+      width: 340px;
+      padding: 12px
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      box-sizing: border-box
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      cursor: pointer
+    }
+
+    .msg {
+      margin-top: 8px;
+      font-size: 13px
+    }
+
+    .row {
+      margin-bottom: 8px
+    }
+  </style>
+</head>
+
+<body>
+  <h3>Dopamine Reset Extension</h3>
+
+  <div id="status" class="msg"></div>
+
+  <div id="consentBox" style="margin-bottom: 10px;">
+    <label>
+      <input type="checkbox" id="telemetryConsent" /> I consent to telemetry and logging of my browser activity.
+    </label>
+  </div>
+
+  <div id="loginBox">
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <div class="msg">Don't have an account? <a id="registerLink" href="#">Register here</a></div>
+  </div>
+
+  <div id="loggedBox" style="display:none;">
+    <div class="msg">✅ Logged in to server</div>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+
+</html>
