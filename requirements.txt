@@ -6,3 +6,4 @@ Werkzeug==3.0.1
 python-dotenv==1.0.0
 itsdangerous==2.1.2
 pg8000
+gunicorn==21.2.0
