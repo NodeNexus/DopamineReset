@@ -1,0 +1,19 @@
+{
+    "name": "Dopamine Reset - BugBashers",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "action": {
+        "default_title": "Dopamine Reset",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}
