@@ -1,0 +1,16 @@
+COMFORT WRAITH - BODYGUARDS (Custom Exponential Curve)
+
+BodyGuard1 - Mistling Spirit Health: 20 HP Abilities: Power Surge +4%
+Effect Strength Attack: Overwhelming Strike - 8 Damage
+
+BodyGuard2 - Hunger Shade Health: 70 HP Abilities: Power Surge +14%
+Effect Strength Attack: Overwhelming Strike - 28 Damage
+
+BodyGuard3 - Gravebound Whisper Health: 180 HP Abilities: Power Surge
++36% Effect Strength Attack: Overwhelming Strike - 72 Damage
+
+BodyGuard4 - Echo Apparition Health: 300 HP Abilities: Power Surge +60%
+Effect Strength Attack: Overwhelming Strike - 120 Damage
+
+BodyGuard5 - Pale Mourner Health: 530 HP Abilities: Power Surge +106%
+Effect Strength Attack: Overwhelming Strike - 212 Damage
